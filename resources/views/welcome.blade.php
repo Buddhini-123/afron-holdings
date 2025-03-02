@@ -146,7 +146,7 @@
                         </div>
                         <br/>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-lg btn-primary btn-block rounded-pill" style="background-color:#196f3d;">login</button>
+                            <button type="submit" class="btn btn-lg btn-block rounded-pill" style="background-color:#196f3d; color: #fff">Login</button>
                         </div>
 
                     </div>

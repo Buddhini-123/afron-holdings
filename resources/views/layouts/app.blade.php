@@ -144,31 +144,9 @@
 
 <body>
 <div class="container-fluid">
-    <div class="row" style="padding-top:0px">
-        <div class="col-md-7 col-sm col-xs" style="padding-left:0px">
-            <div class="row">
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" >
-
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img  src="{{asset('/landing_page_bg/afron.png')}}" alt="First slide">
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-            <div class="col-md-5 col-sm-12 col-xs-12">
-                @yield('content')
-            </div>
-    </div>
+    @yield('content')
 </div>
 
-
-{{-- @include('layouts.partials.javascripts') --}}
-
-<!-- Scripts -->
-{{-- <script src="{{ asset('js/login.js?v=' . $asset_v) }}"></script> --}}
 
 @yield('javascript')
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
