@@ -109,7 +109,7 @@
 @section('content')
     <div class="row">
         <div class="login-form col-md-10 col-xs-10 right-col-content position-absolute top-50 start-50 translate-middle " >
-            {{-- <form method="POST" action="{{ route('login') }}" id="login-form"> --}}
+            <form method="POST" action="{{ route('login') }}" id="login-form">
                 {{ csrf_field() }}
 
                     <div class="panel panel-body shadow-lg p-3 mb-5 bg-white rounded-login-panel">
@@ -132,7 +132,7 @@
                                 <span class="input-group-text">
                                     <i class="fa fa-user"></i>
                                 </span>
-                                <input id="username" type="text" class="form-control" name="username" required autofocus placeholder="Username">
+                                <input id="email" type="text" class="form-control" name="email" required autofocus placeholder="Email">
                             </div>
                         </div>
                         <br/>
@@ -152,13 +152,57 @@
                     </div>
 
                 </div>
-            {{-- </form> --}}
+            </form>
         </div>
     </div>
 
 
 
-@stop
+@endsection
+<!-- Load jQuery (before your script) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#login-form").submit(function (e) {
+            e.preventDefault(); // Prevent form submission
+
+            let formData = $(this).serialize(); // Get form data
+
+            $.ajax({
+                url: "{{ route('login') }}",
+                type: "POST",
+                data: formData,
+                success: function (response) {
+                    console.log(response);
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Login Successful!",
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    setTimeout(() => {
+                        window.location.href = "{{ route('home.index') }}"; // Redirect after login
+                    }, 2000);
+                },
+                error: function (xhr) {
+                    let errorMessage = xhr.responseJSON ? xhr.responseJSON.error : "Invalid credentials!";
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Invalid credentials",
+                        text: errorMessage,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+</script>
 <style>
     .log-in{
         font-size:30px;
