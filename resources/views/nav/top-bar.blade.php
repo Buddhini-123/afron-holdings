@@ -19,7 +19,7 @@
 
     </div>
     <div class="col-md-2 mt-3"> <!-- Align to top-right -->
-        <a href="{{ route('project.overview') }}" class="custom-tab {{ request()->routeIs('project.overview') ? 'active-tab' : '' }}">Project Brief</a>
+        <a href="{{ route('brief.index') }}" class="custom-tab {{ request()->routeIs('brief.index') ? 'active-tab' : '' }}">Project Brief</a>
 
     </div>
 
