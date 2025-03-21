@@ -18,3 +18,6 @@ Route::get('/docs', [DocsController::class, 'index'])->name('docs.index');
 
 Route::get('/mobilization', [MobilizationController::class, 'index'])->name('mobilization.index');
 Route::post('/import-mobilization', [MobilizationController::class, 'importExcel'])->name('import.mobilization');
+Route::post('/save-excel', [MobilizationController::class, 'saveExcel'])->name('save.excel');
+Route::post('/save-excel-re', [DocsController::class, 'saveExcelRE'])->name('save.re');
+

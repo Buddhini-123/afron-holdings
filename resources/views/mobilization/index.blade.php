@@ -113,7 +113,10 @@ th {
     }
 
 </style>
-
+<!-- Include Handsontable CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
+<!-- Include SweetAlert2 CSS (if needed) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @section('content')
 <div class="p-3 mb-5 col-md-12">
     @include('nav.top-bar')
@@ -127,61 +130,75 @@ th {
         });
     </script>
     @endif
-
-    <form action="{{ route('import.mobilization') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <label for="file" class="file-label">Upload File:</label>
-        <div class="row form-group mt-4">
-            <div class="col-4">
-                <input type="file" name="file" id="file" required class="file-input">
-            </div>
-            <div class="col-2"><button type="submit" class="submit-btn btnbackground">Upload</button></div>
-        </div>
-    </form>
-    <div class="row mt-4">
-        <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Number</th>
-                <th>date Date</th>
-                <th >Job Order No.</th>
-                <th >Company Name</th>
-                <th >Country</th>
-                <th >Position</th>
-                <th >Req No</th>
-                <th >Total CV</th>
-                <th >Bal Req CV</th>
-                <th >Handle By</th>
-                <th >Deadline</th>
-                <th >Remarks</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-                @foreach($mobilization as $data)
-                <tr>
-                    <td>{{ $data->id }}</td> <!-- Auto-increment row number -->
-                    <td>{{ $data->date }}</td>
-                    <td>{{ $data->job_order_no }}</td>
-                    <td>{{ $data->company_name }}</td>
-                    <td>{{ $data->country }}</td>
-                    <td>{{ $data->position }}</td>
-                    <td>{{ $data->req_no }}</td>
-                    <td>{{ $data->total_cv }}</td>
-                    <td>{{ $data->bal_req_cv }}</td>
-                    <td>{{ $data->handle_by }}</td>
-                    <td>{{ $data->deadline }}</td>
-                    <td>{{ $data->remarks }}</td>
-                    <td>{{ $data->status }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-
-        </table>
+    <!-- Success message container -->
+    <div id="success-message" class="alert alert-success d-none mt-4">
+        Changes saved successfully!
     </div>
+    <!-- Error message container -->
+    <div id="error-message" class="alert alert-danger d-none mt-4">
+        Failed to save changes.
+    </div>
+    <div id="excel-grid" class="p-3 mb-5 col-md-12 mt-4"></div>
 </div>
 
 
 @endsection
 <!-- Include SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const excelData = @json($excelData); // Pass PHP data to JavaScript
+
+        const container = document.getElementById('excel-grid');
+        if (container) {
+            const hot = new Handsontable(container, {
+                data: excelData,
+                rowHeaders: true,
+                colHeaders: true,
+                contextMenu: true,
+                stretchH: 'all',
+                height: 'auto',
+                licenseKey: 'non-commercial-and-evaluation', // Get a license for production
+                afterChange: (changes, source) => {
+                    if (source === 'edit') {
+                        saveChanges();
+                    }
+                }
+            });
+
+            function saveChanges() {
+                const updatedData = hot.getData(); // Get all data from the grid
+
+                fetch('{{ route("save.excel") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ data: updatedData })
+                }).then(response => response.json())
+                  .then(data => {
+                    const successMessage = document.getElementById('success-message');
+                    const errorMessage = document.getElementById('error-message');
+                      if (data.success) {
+                        successMessage.textContent = 'Changes saved successfully!';
+                        successMessage.classList.remove('d-none'); // Show the message
+                        setTimeout(() => {
+                            successMessage.classList.add('d-none'); // Hide the message after 3 seconds
+                        }, 3000);
+                      } else {
+                        errorMessage.textContent = 'Failed to save changes.';
+                              errorMessage.classList.remove('d-none'); // Show error message
+                              successMessage.classList.add('d-none'); // Hide success message
+                              setTimeout(() => {
+                                  errorMessage.classList.add('d-none'); // Hide error message after 3 seconds
+                              }, 3000);
+                      }
+                  });
+            }
+        } else {
+            console.error('Container element not found');
+        }
+    });
+</script>
