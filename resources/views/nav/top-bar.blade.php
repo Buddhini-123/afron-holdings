@@ -11,7 +11,7 @@
 
     </div>
     <div class="col-md-2 mt-3"> <!-- Align to top-right -->
-        <a href="{{ route('project.overview') }}" class="custom-tab {{ request()->routeIs('project.overview') ? 'active-tab' : '' }}">Master List</a>
+        <a href="{{ route('masterlist.index') }}" class="custom-tab {{ request()->routeIs('masterlist.index') ? 'active-tab' : '' }}">Master List</a>
 
     </div>
     <div class="col-md-2 mt-3"> <!-- Align to top-right -->
