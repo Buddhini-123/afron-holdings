@@ -33,11 +33,15 @@
         <div class="col-md-4"> <!-- Align to top-right -->
             <img src="{{ asset('/landing_page_bg/logo.png') }}" style="height: 70px; width: 160px;" alt="First slide">
         </div>
-        <div class="col-md-5"></div>
+        <div class="col-md-3"></div>
         <div class="col-md-2 mt-3"> <!-- Align to top-right -->
-            <div class="custom-tab">February</div>
+            <div class="custom-tab" id="currentMonth">February</div>
 
         </div>
+        <div class="col-md-2 mt-3">
+            <a href="{{ route('docs.index') }}" class="custom-tab">Overview</a>
+        </div>
+
     </div>
 </div>
 
@@ -101,6 +105,8 @@
         type: 'doughnut',
         data: data
     });
+
+    document.getElementById("currentMonth").innerText = new Date().toLocaleString('default', { month: 'long' });
 </script>
 
 @endsection

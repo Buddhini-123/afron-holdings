@@ -13,4 +13,9 @@ class HomeController extends Controller
         $nonVacantHouses = User::where('is_vacant', 0)->count();
         return view('home', compact('vacantHouses', 'nonVacantHouses'));
     }
+
+    public function overview()
+    {
+        return view('master-list');
+    }
 }
