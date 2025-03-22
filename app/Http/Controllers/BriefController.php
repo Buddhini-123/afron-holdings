@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Branch;
+use Auth;
 
 class BriefController extends Controller
 {
     public function index()
     {
-        $filePath = storage_path('app\brief_upload.xlsx');
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app\\' . $branch->branch . '_brief_upload.xlsx');
 
         // Check if the file exists
         if (!file_exists($filePath)) {
@@ -32,7 +35,8 @@ class BriefController extends Controller
     {
         $updatedData = $request->input('data');
 
-        $filePath = storage_path('app/brief_upload.xlsx');
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app\\' . $branch->branch . '_brief_upload.xlsx');
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
 

@@ -8,12 +8,16 @@ use App\Imports\MobilizationImport;
 use App\Models\Mobilization;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use App\Models\Branch;
+use Auth;
 
 class MobilizationController extends Controller
 {
     public function index()
     {
-        $filePath = storage_path('app\mobilization_upload.xlsx');
+
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app\\' . $branch->branch . '_mobilization_upload.xlsx');
 
         // Check if the file exists
         if (!file_exists($filePath)) {
@@ -45,7 +49,8 @@ class MobilizationController extends Controller
     {
         $updatedData = $request->input('data');
 
-        $filePath = storage_path('app/mobilization_upload.xlsx');
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app\\' . $branch->branch . '_mobilization_upload.xlsx');
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
 

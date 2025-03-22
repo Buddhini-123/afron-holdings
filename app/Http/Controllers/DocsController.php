@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Facades\Excel;
+use Auth;
+use App\Models\Branch;
 
 class DocsController extends Controller
 {
     public function index()
     {
-        $filePath = storage_path('app\re_upload.xlsx');
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app\\' . $branch->branch . '_re_upload.xlsx');
 
         // Check if the file exists
         if (!file_exists($filePath)) {
@@ -32,7 +35,8 @@ class DocsController extends Controller
     {
         $updatedData = $request->input('data');
 
-        $filePath = storage_path('app/re_upload.xlsx');
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app\\' . $branch->branch . '_re_upload.xlsx');
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
 

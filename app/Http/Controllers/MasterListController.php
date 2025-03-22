@@ -6,13 +6,15 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Facades\Excel;
+use Auth;
+use App\Models\Branch;
 
 class MasterListController extends Controller
 {
     public function index()
     {
-        $filePath = storage_path('app\masterlist_upload.xlsx');
-
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app\\' . $branch->branch . '_masterlist_upload.xlsx');
         // Check if the file exists
         if (!file_exists($filePath)) {
             return redirect()->back()->with('error', 'Excel file not found.');
@@ -32,7 +34,8 @@ class MasterListController extends Controller
     {
         $updatedData = $request->input('data');
 
-        $filePath = storage_path('app/masterlist_upload.xlsx');
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app\\' . $branch->branch . '_masterlist_upload.xlsx');
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
 
