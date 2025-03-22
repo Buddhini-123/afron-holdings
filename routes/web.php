@@ -8,6 +8,8 @@ use App\Http\Controllers\MobilizationController;
 use App\Http\Controllers\MasterListController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\BriefController;
+use App\Http\Controllers\MetricController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +31,14 @@ Route::post('/save-excel-re', [DocsController::class, 'saveExcelRE'])->name('sav
 Route::post('/save-excel-mastelist', [MasterListController::class, 'saveExcelM'])->name('save.master');
 Route::post('/save-excel-status', [StatusController::class, 'saveExcelStatus'])->name('save.status');
 Route::post('/save-excel-brief', [BriefController::class, 'saveExcelStatus'])->name('save.brief');
+
+// Increment counts
+Route::post('/metrics/increment-calls', [MetricController::class, 'incrementCalls'])->name('metrics.incrementCalls');
+Route::post('/metrics/increment-customer-visited', [MetricController::class, 'incrementCustomerVisited'])->name('metrics.incrementCustomerVisited');
+Route::post('/metrics/increment-approved', [MetricController::class, 'incrementApproved'])->name('metrics.incrementApproved');
+Route::post('/metrics/increment-selected', [MetricController::class, 'incrementSelected'])->name('metrics.incrementSelecetd');
+
+
 
 
 
