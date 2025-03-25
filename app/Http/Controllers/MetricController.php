@@ -36,7 +36,6 @@ class MetricController extends Controller
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
         ]);
-
         // Find or create a metric record for the branch
         $metric = Metric::firstOrCreate(
             ['branch_id' => $request->branch_id],

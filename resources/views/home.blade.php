@@ -157,8 +157,8 @@
                     <form id="callForm">
                         @csrf
                         <div class="form-group">
-                            <label for="branch_id">Select Branch</label>
-                            <select class="form-control" id="branch_id" name="branch_id" required>
+                            <label for="branch_id_customer">Select Branch</label>
+                            <select class="form-control" id="branch_id_customer" name="branch_id_customer" required>
                                 @foreach($branches as $branch)
                                     <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
                                 @endforeach
@@ -189,8 +189,8 @@
                     <form id="callForm">
                         @csrf
                         <div class="form-group">
-                            <label for="branch_id">Select Branch</label>
-                            <select class="form-control" id="branch_id" name="branch_id" required>
+                            <label for="branch_id_approved">Select Branch</label>
+                            <select class="form-control" id="branch_id_approved" name="branch_id_approved" required>
                                 @foreach($branches as $branch)
                                     <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
                                 @endforeach
@@ -221,8 +221,8 @@
                     <form id="callForm">
                         @csrf
                         <div class="form-group">
-                            <label for="branch_id">Select Branch</label>
-                            <select class="form-control" id="branch_id" name="branch_id" required>
+                            <label for="branch_id_selected">Select Branch</label>
+                            <select class="form-control" id="branch_id_selected" name="branch_id_selected" required>
                                 @foreach($branches as $branch)
                                     <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
                                 @endforeach
@@ -296,7 +296,6 @@
 
             // Get the selected branch ID
             const branchId = $('#branch_id').val();
-
             // Send an AJAX request to increment the call count
             $.ajax({
                 url: "{{ route('metrics.incrementCalls') }}",
@@ -314,7 +313,7 @@
                         timer: 2000,
                         showConfirmButton: false
                         });
-                        $('#callModal').modal('hide'); // Close the modal
+                        location.reload();
                     } else {
                         alert('Failed to update call count.');
                     }
@@ -328,7 +327,8 @@
         $('#submitCustomerVisited').click(function () {
 
             // Get the selected branch ID
-            const branchId = $('#branch_id').val();
+            const branchId = $('#branch_id_customer').val();
+            console.log(branchId);
 
             // Send an AJAX request to increment the call count
             $.ajax({
@@ -339,6 +339,8 @@
                     _token: "{{ csrf_token() }}" // Include CSRF token for security
                 },
                 success: function (response) {
+                    console.log(response);
+
                     if (response.success) {
                         Swal.fire({
                         icon: "success",
@@ -347,7 +349,7 @@
                         timer: 2000,
                         showConfirmButton: false
                         });
-                        $('#callModal').modal('hide'); // Close the modal
+                        location.reload();
                     } else {
                         alert('Failed to update call count.');
                     }
@@ -361,7 +363,7 @@
         $('#submitApproved').click(function () {
 
             // Get the selected branch ID
-            const branchId = $('#branch_id').val();
+            const branchId = $('#branch_id_approved').val();
 
             // Send an AJAX request to increment the call count
             $.ajax({
@@ -380,7 +382,7 @@
                         timer: 2000,
                         showConfirmButton: false
                         });
-                        $('#callModal').modal('hide'); // Close the modal
+                        location.reload();
                     } else {
                         alert('Failed to update approved count.');
                     }
@@ -394,7 +396,7 @@
         $('#submitSelected').click(function () {
 
             // Get the selected branch ID
-            const branchId = $('#branch_id').val();
+            const branchId = $('#branch_id_selected').val();
 
             // Send an AJAX request to increment the call count
             $.ajax({
@@ -413,7 +415,7 @@
                         timer: 2000,
                         showConfirmButton: false
                         });
-                        $('#callModal').modal('hide'); // Close the modal
+                        location.reload();
                     } else {
                         alert('Failed to update selected count.');
                     }

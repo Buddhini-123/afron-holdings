@@ -22,10 +22,18 @@ class HomeController extends Controller
             $calls = collect();
 
         }
-        $call_metric = $calls->calls;
-        $customer_visited_metric = $calls->customer_visited;
-        $approved_metric = $calls->approved;
-        $selected_metric = $calls->selected;
+        if ($calls) {
+            $call_metric = $calls->calls;
+            $customer_visited_metric = $calls->customer_visited;
+            $approved_metric = $calls->approved;
+            $selected_metric = $calls->selected;
+        }else{
+            $call_metric = 0;
+            $customer_visited_metric = 0;
+            $approved_metric = 0;
+            $selected_metric = 0;
+        }
+
         $branches = Branch::all();
         return view('home', compact('selected_metric', 'branches', 'call_metric', 'customer_visited_metric', 'approved_metric'));
     }
