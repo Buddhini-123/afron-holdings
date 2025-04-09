@@ -13,13 +13,13 @@ use Auth;
 
 class MobilizationController extends Controller
 {
-    public function index()
+
+
+    public function index($filter = null)
     {
-
         $branch = Branch::where('user_id', Auth::user()->id)->first();
-        $filePath = storage_path('app\\' . $branch->branch . '_mobilization_upload.xlsx');
+        $filePath = storage_path('app/' . $branch->branch . '_mobilization_upload.xlsx');
 
-        // Check if the file exists
         if (!file_exists($filePath)) {
             return redirect()->back()->with('error', 'Excel file not found.');
         }
@@ -28,6 +28,23 @@ class MobilizationController extends Controller
             $spreadsheet = IOFactory::load($filePath);
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray();
+
+            // If filtering is requested and data has more than one row (headers + content)
+            if ($filter && count($data) > 1) {
+                $header = $data[0];
+                $rows = array_slice($data, 1);
+
+                // Find the index of the "status" column (case-insensitive match)
+                $statusIndex = array_search('status', array_map('strtolower', $header));
+
+                if ($statusIndex !== false) {
+                    $rows = array_filter($rows, function ($row) use ($statusIndex, $filter) {
+                        return isset($row[$statusIndex]) && strtolower($row[$statusIndex]) === strtolower($filter);
+                    });
+                    $data = array_merge([$header], $rows); // Recombine header + filtered rows
+                }
+            }
+
             return view('mobilization.index', ['excelData' => $data, 'branch' => $branch]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error loading Excel file: ' . $e->getMessage());
