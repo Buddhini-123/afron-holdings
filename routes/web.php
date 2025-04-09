@@ -18,6 +18,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 Route::get('/project', [HomeController::class, 'overview'])->name('project.overview');
+Route::get('/summary-navigation', [HomeController::class, 'navigation'])->name('summary.navigation');
 
 Route::get('/docs', [DocsController::class, 'index'])->name('docs.index');
 Route::get('/masterlist', [MasterListController::class, 'index'])->name('masterlist.index');

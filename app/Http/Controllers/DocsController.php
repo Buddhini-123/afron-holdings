@@ -25,7 +25,7 @@ class DocsController extends Controller
             $spreadsheet = IOFactory::load($filePath);
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray();
-            return view('docs.index', ['excelData' => $data]);
+            return view('docs.index', ['excelData' => $data, 'branch' => $branch]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error loading Excel file: ' . $e->getMessage());
         }

@@ -34,12 +34,16 @@ class HomeController extends Controller
             $selected_metric = 0;
         }
 
-        $branches = Branch::all();
-        return view('home', compact('selected_metric', 'branches', 'call_metric', 'customer_visited_metric', 'approved_metric'));
+        return view('home', compact('selected_metric', 'branch', 'call_metric', 'customer_visited_metric', 'approved_metric'));
     }
 
     public function overview()
     {
         return view('master-list');
+    }
+
+    public function navigation()
+    {
+        return view('summary-navigation');
     }
 }

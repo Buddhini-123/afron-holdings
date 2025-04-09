@@ -111,6 +111,22 @@ th {
     .btnbackground{
         background-color: #0F2B46 !important;
     }
+    .btn-round {
+        width: 60px; /* Adjust size of the round button */
+        height: 60px; /* Adjust size of the round button */
+        border-radius: 50%; /* Make it round */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px; /* Adjust icon size */
+        color: white; /* Icon color */
+        border: none; /* Remove border */
+        margin: 10px; /* Add some spacing */
+    }
+
+    .btn-round.green {
+        background-color: green; /* Green button */
+    }
 
 </style>
 <!-- Include Handsontable CSS -->
@@ -119,7 +135,54 @@ th {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @section('content')
 <div class="p-3 mb-5 col-md-12">
-    @include('nav.top-bar')
+    <!-- Round Buttons with Icons -->
+    <div class="row mt-2">
+        <div class="col-md-4"> <!-- Align to top-right -->
+            <a href="{{ route('mobilization.index') }}" class="custom-tab {{ request()->routeIs('mobilization.index') ? 'active-tab' : '' }}">Project Status Overview</a>
+
+        </div>
+        <div class="col-3">
+        </div>
+
+        <div class="col-5">
+            <div class="row justify-content-center">
+                <div class="col-auto text-center">
+                    <button class="btn-round green" data-toggle="modal" data-target="#approvedModal">
+                        <i class="fas fa-check"></i> <!-- Tick Icon -->
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for Approved -->
+    <div class="modal fade" id="approvedModal" tabindex="-1" role="dialog" aria-labelledby="approvedModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="approvedModalLabel">Increment Call Count</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Branch Selection Form -->
+                    <form id="callForm">
+                        @csrf
+                        <div class="form-group">
+                            <label for="branch_id_approved">Branch</label>
+                            <select class="form-control" id="branch_id_approved" name="branch_id_approved" disabled>
+                                    <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submitApproved">Increment Approved Count</button>
+                </div>
+            </div>
+        </div>
+    </div>
     @if(session('success'))
     <script>
         Swal.fire({
@@ -146,6 +209,10 @@ th {
 <!-- Include SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const excelData = @json($excelData); // Pass PHP data to JavaScript
@@ -200,5 +267,41 @@ th {
         } else {
             console.error('Container element not found');
         }
+    });
+
+    $(document).ready(function () {
+        $('#submitApproved').click(function () {
+
+            console.log('jj');
+
+            // Get the selected branch ID
+            const branchId = $('#branch_id_approved').val();
+
+            // Send an AJAX request to increment the call count
+            $.ajax({
+                url: "{{ route('metrics.incrementApproved') }}",
+                method: 'POST',
+                data: {
+                    branch_id: branchId,
+                    _token: "{{ csrf_token() }}" // Include CSRF token for security
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                        icon: "success",
+                        title: "Approved count updated successfully!",
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                        });
+                    } else {
+                        alert('Failed to update approved count.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while updating the approved count.');
+                }
+            });
+        });
     });
 </script>

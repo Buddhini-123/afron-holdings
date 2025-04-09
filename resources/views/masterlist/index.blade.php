@@ -44,7 +44,10 @@ th {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @section('content')
 <div class="p-3 mb-5 col-md-12">
-    @include('nav.top-bar')
+    <div class="col-md-2 mt-3"> <!-- Align to top-right -->
+        <a href="{{ route('masterlist.index') }}" class="custom-tab {{ request()->routeIs('masterlist.index') ? 'active-tab' : '' }}">Master List</a>
+
+    </div>
     @if(session('success'))
     <script>
         Swal.fire({

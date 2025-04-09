@@ -23,30 +23,8 @@
         width: 250px; /* Adjust width to match proportion */
         height: 40px; /* Adjust height */
     }
-
-    .btn-round {
-        width: 60px; /* Adjust size of the round button */
-        height: 60px; /* Adjust size of the round button */
-        border-radius: 50%; /* Make it round */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px; /* Adjust icon size */
-        color: white; /* Icon color */
-        border: none; /* Remove border */
-        margin: 10px; /* Add some spacing */
-    }
-
-    .btn-round.green {
-        background-color: green; /* Green button */
-    }
-
-    .btn-round.blue {
-        background-color: blue; /* Blue button */
-    }
-
-    .btn-round.purple {
-        background-color: purple; /* Purple button */
+    canvas {
+        cursor: pointer;
     }
 </style>
 
@@ -61,43 +39,12 @@
             <div class="custom-tab" id="currentMonth">February</div>
         </div>
         <div class="col-md-2 mt-3">
-            <a href="{{ route('docs.index') }}" class="custom-tab">Overview</a>
+            <a href="{{ route('summary.navigation') }}" class="custom-tab">Overview</a>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <!-- Round Buttons with Icons -->
-    <div class="row mt-2">
-        <div class="col-7">
-            <!-- Left content (if any) -->
-        </div>
-
-        <div class="col-5">
-            <div class="row justify-content-center">
-                <div class="col-auto text-center">
-                    <button class="btn-round green" data-toggle="modal" data-target="#callModal">
-                        <i class="fas fa-phone"></i> <!-- Call Icon -->
-                    </button>
-                </div>
-                <div class="col-auto text-center">
-                    <button class="btn-round blue" data-toggle="modal" data-target="#customerVisitedModal">
-                        <i class="fas fa-users"></i> <!-- Users Icon -->
-                    </button>
-                </div>
-                <div class="col-auto text-center">
-                    <button class="btn-round green" data-toggle="modal" data-target="#approvedModal">
-                        <i class="fas fa-check"></i> <!-- Tick Icon -->
-                    </button>
-                </div>
-                <div class="col-auto text-center">
-                    <button class="btn-round purple" data-toggle="modal" data-target="#selectedModal">
-                        <i class="fas fa-check"></i> <!-- Tick Icon -->
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row mt-5">
         <div class="col-md-4">
             <canvas id="houseChart"></canvas>
@@ -107,134 +54,6 @@
         </div>
         <div class="col-md-4">
             <canvas id="houseChart3"></canvas>
-        </div>
-    </div>
-
-    <!-- Modal for Calls -->
-    <div class="modal fade" id="callModal" tabindex="-1" role="dialog" aria-labelledby="customerVisitedModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="callModalLabel">Increment Call Count</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Branch Selection Form -->
-                    <form id="callForm">
-                        @csrf
-                        <div class="form-group">
-                            <label for="branch_id">Select Branch</label>
-                            <select class="form-control" id="branch_id" name="branch_id" required>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitCall">Increment Call Count</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for Customer Visited -->
-    <div class="modal fade" id="customerVisitedModal" tabindex="-1" role="dialog" aria-labelledby="customerVisitedModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="customerVisitedModalLabel">Increment Call Count</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Branch Selection Form -->
-                    <form id="callForm">
-                        @csrf
-                        <div class="form-group">
-                            <label for="branch_id_customer">Select Branch</label>
-                            <select class="form-control" id="branch_id_customer" name="branch_id_customer" required>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitCustomerVisited">Increment Customer Visited Count</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for Approved -->
-    <div class="modal fade" id="approvedModal" tabindex="-1" role="dialog" aria-labelledby="approvedModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="approvedModalLabel">Increment Call Count</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Branch Selection Form -->
-                    <form id="callForm">
-                        @csrf
-                        <div class="form-group">
-                            <label for="branch_id_approved">Select Branch</label>
-                            <select class="form-control" id="branch_id_approved" name="branch_id_approved" required>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitApproved">Increment Approved Count</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal for Selected -->
-    <div class="modal fade" id="selectedModal" tabindex="-1" role="dialog" aria-labelledby="selectedModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="selectedModalLabel">Increment Call Count</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Branch Selection Form -->
-                    <form id="callForm">
-                        @csrf
-                        <div class="form-group">
-                            <label for="branch_id_selected">Select Branch</label>
-                            <select class="form-control" id="branch_id_selected" name="branch_id_selected" required>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitSelected">Increment Selected Count</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -289,142 +108,19 @@
 
     document.getElementById("currentMonth").innerText = new Date().toLocaleString('default', { month: 'long' });
 </script>
+
 <script>
-    $(document).ready(function () {
-        // Handle click event for the submit button
-        $('#submitCall').click(function () {
+    document.getElementById('houseChart').addEventListener('click', function () {
+        window.location.href = '/docs'; // replace with your desired URL
+    });
 
-            // Get the selected branch ID
-            const branchId = $('#branch_id').val();
-            // Send an AJAX request to increment the call count
-            $.ajax({
-                url: "{{ route('metrics.incrementCalls') }}",
-                method: 'POST',
-                data: {
-                    branch_id: branchId,
-                    _token: "{{ csrf_token() }}" // Include CSRF token for security
-                },
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                        icon: "success",
-                        title: "Call count updated successfully!",
-                        text: response.message,
-                        timer: 2000,
-                        showConfirmButton: false
-                        });
-                        location.reload();
-                    } else {
-                        alert('Failed to update call count.');
-                    }
-                },
-                error: function () {
-                    alert('An error occurred while updating the call count.');
-                }
-            });
-        });
+    document.getElementById('houseChart2').addEventListener('click', function () {
+        window.location.href = '/mobilization';
+    });
 
-        $('#submitCustomerVisited').click(function () {
-
-            // Get the selected branch ID
-            const branchId = $('#branch_id_customer').val();
-            console.log(branchId);
-
-            // Send an AJAX request to increment the call count
-            $.ajax({
-                url: "{{ route('metrics.incrementCustomerVisited') }}",
-                method: 'POST',
-                data: {
-                    branch_id: branchId,
-                    _token: "{{ csrf_token() }}" // Include CSRF token for security
-                },
-                success: function (response) {
-                    console.log(response);
-
-                    if (response.success) {
-                        Swal.fire({
-                        icon: "success",
-                        title: "Customer Visited count updated successfully!",
-                        text: response.message,
-                        timer: 2000,
-                        showConfirmButton: false
-                        });
-                        location.reload();
-                    } else {
-                        alert('Failed to update call count.');
-                    }
-                },
-                error: function () {
-                    alert('An error occurred while updating the customer visited count.');
-                }
-            });
-        });
-
-        $('#submitApproved').click(function () {
-
-            // Get the selected branch ID
-            const branchId = $('#branch_id_approved').val();
-
-            // Send an AJAX request to increment the call count
-            $.ajax({
-                url: "{{ route('metrics.incrementApproved') }}",
-                method: 'POST',
-                data: {
-                    branch_id: branchId,
-                    _token: "{{ csrf_token() }}" // Include CSRF token for security
-                },
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                        icon: "success",
-                        title: "Approved count updated successfully!",
-                        text: response.message,
-                        timer: 2000,
-                        showConfirmButton: false
-                        });
-                        location.reload();
-                    } else {
-                        alert('Failed to update approved count.');
-                    }
-                },
-                error: function () {
-                    alert('An error occurred while updating the approved count.');
-                }
-            });
-        });
-
-        $('#submitSelected').click(function () {
-
-            // Get the selected branch ID
-            const branchId = $('#branch_id_selected').val();
-
-            // Send an AJAX request to increment the call count
-            $.ajax({
-                url: "{{ route('metrics.incrementSelecetd') }}",
-                method: 'POST',
-                data: {
-                    branch_id: branchId,
-                    _token: "{{ csrf_token() }}" // Include CSRF token for security
-                },
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                        icon: "success",
-                        title: "Selected count updated successfully!",
-                        text: response.message,
-                        timer: 2000,
-                        showConfirmButton: false
-                        });
-                        location.reload();
-                    } else {
-                        alert('Failed to update selected count.');
-                    }
-                },
-                error: function () {
-                    alert('An error occurred while updating the selected count.');
-                }
-            });
-            });
+    document.getElementById('houseChart3').addEventListener('click', function () {
+        window.location.href = '/masterlist';
     });
 </script>
+
 @endsection
