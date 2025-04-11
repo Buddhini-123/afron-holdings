@@ -83,7 +83,7 @@
 
     {{-- Project Status Summary --}}
     <div class="mt-4">
-        <a href="{{ url('/status') }}" class="btn btn-custom navy-btn">Project Status Summary</a>
+        <a href="{{ url('/status/show') }}" class="btn btn-custom navy-btn">Project Status Summary</a>
         <div class="mt-2">
             <a href="{{ url('/project-brief/show') }}" class="btn btn-custom blue-btn">Project Brief</a>
         </div>

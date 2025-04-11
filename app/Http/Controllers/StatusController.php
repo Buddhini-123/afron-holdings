@@ -55,4 +55,21 @@ class StatusController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function showExcelData()
+    {
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app/' . $branch->branch . '_status_upload.xlsx');
+
+        if (!file_exists($filePath)) {
+            return back()->with('error', 'File not found.');
+        }
+
+        $data = Excel::toCollection(null, $filePath);
+
+        // Usually data is in the first sheet
+        $sheetData = $data->first();
+
+        return view('status.show', compact('sheetData'));
+    }
 }
