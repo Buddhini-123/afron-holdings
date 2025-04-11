@@ -99,10 +99,10 @@ class MobilizationController extends Controller
             'status' => 'required|string',
 
             // Validate array fields
-            'positions' => 'required|array',
-            'req_nos' => 'required|array',
-            'total_cvs' => 'required|array',
-            'bal_req_cvs' => 'required|array',
+            'positions.*' => 'required|string',
+            'req_nos.*' => 'required|integer',
+            'total_cvs.*' => 'required|integer',
+            'bal_req_cvs.*' => 'required|integer',
         ]);
 
         // Store the main mobilization entry (optional if you use a separate table)

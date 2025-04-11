@@ -10,19 +10,16 @@
         text-align: center;
         width: 180px;
     }
-
     .green-btn {
         background-color: #8DC63F;
         border: none;
     }
-
     .form-section {
         background: white;
         padding: 40px;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-
     input[type="text"], input[type="date"], select {
         width: 100%;
         padding: 8px;
@@ -30,17 +27,14 @@
         border-radius: 6px;
         margin-bottom: 20px;
     }
-
     .position-table input {
         width: 100%;
         padding: 6px;
         text-align: center;
     }
-
     .position-table th, .position-table td {
         padding: 8px;
     }
-
     .add-btn {
         font-size: 24px;
         cursor: pointer;
@@ -53,8 +47,14 @@
     }
 </style>
 
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
 <div class="container my-5">
-    {{-- Top Buttons and Logo --}}
+    <!-- Top Buttons and Logo -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <a href="#" class="btn btn-custom green-btn">Go Back</a>
         <div class="col-md-4 text-center">
@@ -63,40 +63,87 @@
         <a href="#" class="btn btn-custom green-btn">Mobilization Form</a>
     </div>
 
-    {{-- Form --}}
+    <!-- Form Section -->
     <div class="form-section">
+        <!-- Success Message Using SweetAlert2 -->
+        @if(session('success'))
+            <script>
+                $(document).ready(function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: '{{ session("success") }}',
+                        confirmButtonText: 'Ok'
+                    });
+                });
+            </script>
+        @endif
+        <div id="success-message" class="alert alert-success d-none mt-4">
+            Changes saved successfully!
+        </div>
+
+        <!-- Error Messages Using Toastr -->
+        @if ($errors->any())
+            <script>
+                $(document).ready(function () {
+                    @foreach ($errors->all() as $error)
+                        toastr.error("{{ $error }}");
+                    @endforeach
+                });
+            </script>
+        @endif
+
         <form method="POST" action="{{ route('mobilization.store') }}">
             @csrf
             <div class="row">
                 <div class="col-md-4">
                     <label>Date</label>
                     <input type="date" name="date" placeholder="Enter Date">
+                    @error('date')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
                 <div class="col-md-4">
                     <label>Number</label>
                     <input type="text" name="number" placeholder="Enter Number">
+                    @error('number')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
                 <div class="col-md-4">
                     <label>Job Order No.</label>
                     <input type="text" name="job_order_no" placeholder="Enter Job Order No">
+                    @error('job_order_no')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
-
                 <div class="col-md-4">
                     <label>Company Name</label>
-                    <input type="text" name="company_name" placeholder="Enter Company name">
+                    <input type="text" name="company_name" placeholder="Enter Company Name">
+                    @error('company_name')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
                 <div class="col-md-4">
                     <label>Handled By</label>
-                    <input type="text" name="handled_by" placeholder="Enter Handle By">
+                    <input type="text" name="handled_by" placeholder="Enter Handled By">
+                    @error('handled_by')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
                 <div class="col-md-4">
                     <label>Deadline</label>
                     <input type="date" name="deadline" placeholder="Enter Deadline">
+                    @error('deadline')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
-
                 <div class="col-md-4">
                     <label>Country</label>
                     <input type="text" name="country" placeholder="Enter Country">
+                    @error('country')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
                 <div class="col-md-4">
                     <label>Status</label>
@@ -105,10 +152,13 @@
                         <option value="in_progress">InCompleted</option>
                         <option value="pending">Cancelled</option>
                     </select>
+                    @error('status')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
             </div>
 
-            {{-- Table Section --}}
+            <!-- Table Section for Positions -->
             <div class="table-responsive mt-4">
                 <table class="table position-table border">
                     <thead class="table-light">
@@ -120,12 +170,42 @@
                         </tr>
                     </thead>
                     <tbody id="positionTableBody">
+                        @php
+                            $positions = old('positions', ['']);
+                            $req_nos = old('req_nos', ['']);
+                            $total_cvs = old('total_cvs', ['']);
+                            $bal_req_cvs = old('bal_req_cvs', ['']);
+                        @endphp
+
+                        @foreach ($positions as $i => $position)
                         <tr>
-                            <td><input type="text" name="positions[]" placeholder="Enter Position"></td>
-                            <td><input type="text" name="req_nos[]" placeholder="Enter Req No"></td>
-                            <td><input type="text" name="total_cvs[]" placeholder="Entet Total CV"></td>
-                            <td><input type="text" name="bal_req_cvs[]" placeholder="Enter Balance"></td>
+                            <td>
+                                <input type="text" name="positions[]" value="{{ $position }}" placeholder="Enter Position">
+                                @error('positions.' . $i)
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </td>
+                            <td>
+                                <input type="text" name="req_nos[]" value="{{ $req_nos[$i] ?? '' }}" placeholder="Enter Req No">
+                                @error('req_nos.' . $i)
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </td>
+                            <td>
+                                <input type="text" name="total_cvs[]" value="{{ $total_cvs[$i] ?? '' }}" placeholder="Enter Total CV">
+                                @error('total_cvs.' . $i)
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </td>
+                            <td>
+                                <input type="text" name="bal_req_cvs[]" value="{{ $bal_req_cvs[$i] ?? '' }}" placeholder="Enter Balance">
+                                @error('bal_req_cvs.' . $i)
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </td>
                         </tr>
+                        @endforeach
+
                     </tbody>
                 </table>
 
@@ -143,7 +223,7 @@
                 </table>
             </div>
 
-            {{-- Action Buttons --}}
+            <!-- Action Buttons -->
             <div class="d-flex justify-content-between mt-4">
                 <button type="reset" class="btn btn-custom green-btn">Reset</button>
                 <button type="submit" class="btn btn-custom green-btn">Save</button>
@@ -151,19 +231,28 @@
         </form>
     </div>
 </div>
+
+<!-- Include jQuery (required for SweetAlert2 and Toastr) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Include Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 <script>
+    // Dynamic addition of rows for positions table
     document.getElementById('addRowBtn').addEventListener('click', function () {
         const tbody = document.getElementById('positionTableBody');
-
         const row = document.createElement('tr');
         row.innerHTML = `
             <td><input type="text" name="positions[]" placeholder="Position"></td>
-            <td><input type="text" name="req_nos[]" value="0"></td>
-            <td><input type="text" name="total_cvs[]" value="0"></td>
-            <td><input type="text" name="bal_req_cvs[]" value="0"></td>
+            <td><input type="text" name="req_nos[]"></td>
+            <td><input type="text" name="total_cvs[]"></td>
+            <td><input type="text" name="bal_req_cvs[]"></td>
         `;
         tbody.appendChild(row);
     });
 </script>
-
 @endsection

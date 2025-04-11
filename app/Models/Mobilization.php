@@ -23,7 +23,9 @@ class Mobilization extends Model
         'handle_by',
         'deadline',
         'remarks',
-        'status'
+        'status',
+        'number',
+        'handled_by'
     ];
 
     public function positions()
