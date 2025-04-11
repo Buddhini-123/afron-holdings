@@ -84,4 +84,49 @@ class MobilizationController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function store(Request $request)
+    {
+        // Validate basic form inputs
+        $validated = $request->validate([
+            'date' => 'required|date',
+            'number' => 'required|string',
+            'job_order_no' => 'required|string',
+            'company_name' => 'required|string',
+            'handled_by' => 'required|string',
+            'deadline' => 'required|date',
+            'country' => 'required|string',
+            'status' => 'required|string',
+
+            // Validate array fields
+            'positions' => 'required|array',
+            'req_nos' => 'required|array',
+            'total_cvs' => 'required|array',
+            'bal_req_cvs' => 'required|array',
+        ]);
+
+        // Store the main mobilization entry (optional if you use a separate table)
+        $mobilization = Mobilization::create([
+            'date' => $request->date,
+            'number' => $request->number,
+            'job_order_no' => $request->job_order_no,
+            'company_name' => $request->company_name,
+            'handled_by' => $request->handled_by,
+            'deadline' => $request->deadline,
+            'country' => $request->country,
+            'status' => $request->status,
+        ]);
+
+        // Store positions (assumes related model like MobilizationPosition)
+        foreach ($request->positions as $index => $position) {
+            $mobilization->positions()->create([
+                'position' => $position,
+                'req_no' => $request->req_nos[$index],
+                'total_cv' => $request->total_cvs[$index],
+                'bal_req_cv' => $request->bal_req_cvs[$index],
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Mobilization data saved successfully.');
+    }
 }

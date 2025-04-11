@@ -65,7 +65,7 @@
 
     {{-- Form --}}
     <div class="form-section">
-        <form method="POST" action="">
+        <form method="POST" action="{{ route('mobilization.store') }}">
             @csrf
             <div class="row">
                 <div class="col-md-4">

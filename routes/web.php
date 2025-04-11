@@ -26,6 +26,7 @@ Route::get('/status', [StatusController::class, 'index'])->name('status.index');
 Route::get('/brief/{filter?}', [BriefController::class, 'index'])->name('brief.index');
 
 Route::get('/mobilization/{filter?}', [MobilizationController::class, 'index'])->name('mobilization.index');
+Route::post('/mobilization', [MobilizationController::class, 'store'])->name('mobilization.store');
 Route::post('/import-mobilization', [MobilizationController::class, 'importExcel'])->name('import.mobilization');
 Route::post('/save-excel', [MobilizationController::class, 'saveExcel'])->name('save.excel');
 Route::post('/save-excel-re', [DocsController::class, 'saveExcelRE'])->name('save.re');
