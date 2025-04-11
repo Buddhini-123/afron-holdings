@@ -24,8 +24,11 @@ Route::get('/docs', [DocsController::class, 'index'])->name('docs.index');
 Route::get('/docs/show', [DocsController::class, 'showExcelData'])->name('docs.show');
 
 Route::get('/masterlist', [MasterListController::class, 'index'])->name('masterlist.index');
+Route::get('/masterlist/show', [MasterListController::class, 'showExcelData'])->name('masterlist.show');
+
 Route::get('/status', [StatusController::class, 'index'])->name('status.index');
 Route::get('/brief/{filter?}', [BriefController::class, 'index'])->name('brief.index');
+Route::get('/project-brief/show/{filter?}', [BriefController::class, 'showExcelData'])->name('brief.show');
 
 Route::get('/mobilization/{filter?}', [MobilizationController::class, 'index'])->name('mobilization.index');
 Route::post('/mobilization', [MobilizationController::class, 'store'])->name('mobilization.store');

@@ -8,13 +8,14 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Auth;
 use App\Models\Branch;
+use Illuminate\Support\Collection;
 
 class MasterListController extends Controller
 {
     public function index()
     {
         $branch = Branch::where('user_id', Auth::user()->id)->first();
-        $filePath = storage_path('app\\' . $branch->branch . '_masterlist_upload.xlsx');
+        $filePath = storage_path('app/' . $branch->branch . '_masterlist_upload.xlsx');
         // Check if the file exists
         if (!file_exists($filePath)) {
             return redirect()->back()->with('error', 'Excel file not found.');
@@ -51,5 +52,22 @@ class MasterListController extends Controller
         $writer->save($filePath);
 
         return response()->json(['success' => true]);
+    }
+
+    public function showExcelData()
+    {
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app/' . $branch->branch . '_masterlist_upload.xlsx');
+
+        if (!file_exists($filePath)) {
+            return back()->with('error', 'File not found.');
+        }
+
+        $data = Excel::toCollection(null, $filePath);
+
+        // Usually data is in the first sheet
+        $sheetData = $data->first();
+
+        return view('masterlist.show', compact('sheetData'));
     }
 }

@@ -8,6 +8,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Branch;
 use Auth;
+use Illuminate\Support\Collection;
 
 class BriefController extends Controller
 {
@@ -69,5 +70,47 @@ class BriefController extends Controller
         $writer->save($filePath);
 
         return response()->json(['success' => true]);
+    }
+
+    public function showExcelData($filter = null)
+    {
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app/' . $branch->branch . '_brief_upload.xlsx');
+
+        if (!file_exists($filePath)) {
+            return back()->with('error', 'File not found.');
+        }
+
+        $data = Excel::toCollection(null, $filePath);
+
+        if ($data->isEmpty()) {
+            return back()->with('error', 'No data found in the Excel file.');
+        }
+
+        $sheet = $data->first(); // First sheet
+        if ($sheet->count() < 2) {
+            return back()->with('error', 'Insufficient data in the Excel file.');
+        }
+
+        // Extract header row
+        $headerRow = $sheet->first();
+        $rows = $sheet->slice(1); // Remove header
+
+        // Find the index of the "status" column (case-insensitive)
+        $statusIndex = collect($headerRow)->map(function ($value) {
+            return strtolower($value);
+        })->search('status');
+
+        // If a filter is given and status column exists
+        if ($filter && $statusIndex !== false) {
+            $rows = $rows->filter(function ($row) use ($statusIndex, $filter) {
+                return isset($row[$statusIndex]) && strtolower($row[$statusIndex]) === strtolower($filter);
+            })->values();
+        }
+
+        // Re-combine header and filtered rows
+        $sheetData = collect([$headerRow])->concat($rows);
+
+        return view('brief.show', compact('sheetData', 'branch'));
     }
 }
