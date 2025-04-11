@@ -56,7 +56,7 @@
 <div class="container my-5">
     <!-- Top Buttons and Logo -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="#" class="btn btn-custom green-btn">Go Back</a>
+        <a href="{{ route('home.index') }}" class="btn btn-custom green-btn">Go Back</a>
         <div class="col-md-4 text-center">
             <img src="{{ asset('/landing_page_bg/new_logo.png') }}" alt="Logo" class="logo mb-2">
         </div>
@@ -193,23 +193,24 @@
                                 @enderror
                             </td>
                             <td>
-                                <input type="text" name="req_nos[]" value="{{ $req_nos[$i] ?? '' }}" placeholder="Enter Req No">
+                                <input type="text" name="req_nos[]" class="form-control req_no" value="{{ $req_nos[$i] ?? '' }}" placeholder="Enter Req No">
                                 @error('req_nos.' . $i)
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </td>
                             <td>
-                                <input type="text" name="total_cvs[]" value="{{ $total_cvs[$i] ?? '' }}" placeholder="Enter Total CV">
+                                <input type="text" name="total_cvs[]" class="form-control total_cv" value="{{ $total_cvs[$i] ?? '' }}" placeholder="Enter Total CV">
                                 @error('total_cvs.' . $i)
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </td>
                             <td>
-                                <input type="text" name="bal_req_cvs[]" value="{{ $bal_req_cvs[$i] ?? '' }}" placeholder="Enter Balance">
+                                <input type="text" name="bal_req_cvs[]" class="form-control bal_cv" value="{{ $bal_req_cvs[$i] ?? '' }}" placeholder="Enter Balance">
                                 @error('bal_req_cvs.' . $i)
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </td>
+
                         </tr>
                         @endforeach
 
@@ -223,9 +224,9 @@
                 <table class="table mt-3">
                     <tr>
                         <th style="text-align: right;">Total</th>
-                        <td><input type="text" name="total_req" value="8" readonly></td>
-                        <td><input type="text" name="total_cv" value="10" readonly></td>
-                        <td><input type="text" name="total_bal" value="3" readonly></td>
+                        <td><input type="text" id="total_req" name="total_req" readonly class="form-control"></td>
+                        <td><input type="text" id="total_cv" name="total_cv" readonly class="form-control"></td>
+                        <td><input type="text" id="total_bal" name="total_bal" readonly class="form-control"></td>
                     </tr>
                 </table>
             </div>
@@ -249,17 +250,52 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-    // Dynamic addition of rows for positions table
+    // Function to recalculate totals
+    function calculateTotals() {
+        let totalReq = 0, totalCV = 0, totalBal = 0;
+
+        document.querySelectorAll('.req_no').forEach(el => {
+            totalReq += parseInt(el.value) || 0;
+        });
+        document.querySelectorAll('.total_cv').forEach(el => {
+            totalCV += parseInt(el.value) || 0;
+        });
+        document.querySelectorAll('.bal_cv').forEach(el => {
+            totalBal += parseInt(el.value) || 0;
+        });
+
+        document.getElementById('total_req').value = totalReq;
+        document.getElementById('total_cv').value = totalCV;
+        document.getElementById('total_bal').value = totalBal;
+    }
+
+    // Function to bind event listener to an input
+    function bindTotalEvents(input) {
+        input.addEventListener('input', calculateTotals);
+    }
+
+    // Initial event binding for existing inputs
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.req_no, .total_cv, .bal_cv').forEach(bindTotalEvents);
+        calculateTotals();
+    });
+
+    // Dynamic row addition
     document.getElementById('addRowBtn').addEventListener('click', function () {
         const tbody = document.getElementById('positionTableBody');
         const row = document.createElement('tr');
         row.innerHTML = `
             <td><input type="text" name="positions[]" placeholder="Position"></td>
-            <td><input type="text" name="req_nos[]"></td>
-            <td><input type="text" name="total_cvs[]"></td>
-            <td><input type="text" name="bal_req_cvs[]"></td>
+            <td><input type="text" name="req_nos[]" class="req_no" placeholder="Req No"></td>
+            <td><input type="text" name="total_cvs[]" class="total_cv" placeholder="Total CVs"></td>
+            <td><input type="text" name="bal_req_cvs[]" class="bal_cv" placeholder="Balance CVs"></td>
         `;
         tbody.appendChild(row);
+
+        // Bind total calculation events to new inputs
+        row.querySelectorAll('.req_no, .total_cv, .bal_cv').forEach(bindTotalEvents);
     });
 </script>
+
+
 @endsection
