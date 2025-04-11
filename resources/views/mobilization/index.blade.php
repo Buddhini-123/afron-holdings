@@ -70,33 +70,33 @@
             <div class="row">
                 <div class="col-md-4">
                     <label>Date</label>
-                    <input type="date" name="date" value="2000-12-12">
+                    <input type="date" name="date" placeholder="Enter Date">
                 </div>
                 <div class="col-md-4">
                     <label>Number</label>
-                    <input type="text" name="number" value="187">
+                    <input type="text" name="number" placeholder="Enter Number">
                 </div>
                 <div class="col-md-4">
                     <label>Job Order No.</label>
-                    <input type="text" name="job_order_no" value="182734">
+                    <input type="text" name="job_order_no" placeholder="Enter Job Order No">
                 </div>
 
                 <div class="col-md-4">
                     <label>Company Name</label>
-                    <input type="text" name="company_name" value="ABC Tech">
+                    <input type="text" name="company_name" placeholder="Enter Company name">
                 </div>
                 <div class="col-md-4">
                     <label>Handled By</label>
-                    <input type="text" name="handled_by" value="ABC Tech">
+                    <input type="text" name="handled_by" placeholder="Enter Handle By">
                 </div>
                 <div class="col-md-4">
                     <label>Deadline</label>
-                    <input type="date" name="deadline" value="2000-12-12">
+                    <input type="date" name="deadline" placeholder="Enter Deadline">
                 </div>
 
                 <div class="col-md-4">
                     <label>Country</label>
-                    <input type="text" name="country" value="Belgium">
+                    <input type="text" name="country" placeholder="Enter Country">
                 </div>
                 <div class="col-md-4">
                     <label>Status</label>
@@ -121,10 +121,10 @@
                     </thead>
                     <tbody id="positionTableBody">
                         <tr>
-                            <td><input type="text" name="positions[]" value="Software Dev" readonly></td>
-                            <td><input type="text" name="req_nos[]" value="3"></td>
-                            <td><input type="text" name="total_cvs[]" value="4"></td>
-                            <td><input type="text" name="bal_req_cvs[]" value="2"></td>
+                            <td><input type="text" name="positions[]" placeholder="Enter Position"></td>
+                            <td><input type="text" name="req_nos[]" placeholder="Enter Req No"></td>
+                            <td><input type="text" name="total_cvs[]" placeholder="Entet Total CV"></td>
+                            <td><input type="text" name="bal_req_cvs[]" placeholder="Enter Balance"></td>
                         </tr>
                     </tbody>
                 </table>
