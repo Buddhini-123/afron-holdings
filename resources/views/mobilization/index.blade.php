@@ -67,17 +67,24 @@
     <div class="form-section">
         <!-- Success Message Using SweetAlert2 -->
         @if(session('success'))
-            <script>
-                $(document).ready(function () {
+        <script>
+            // Wait for the document to be fully loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                // Check if Swal is available
+                if (typeof Swal !== 'undefined') {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: '{{ session("success") }}',
+                        text: '{{ session('success') }}',
                         confirmButtonText: 'Ok'
                     });
-                });
-            </script>
+                } else {
+                    console.error('SweetAlert2 is not loaded');
+                }
+            });
+        </script>
         @endif
+
         <div id="success-message" class="alert alert-success d-none mt-4">
             Changes saved successfully!
         </div>
