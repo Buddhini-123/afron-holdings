@@ -48,6 +48,11 @@ th {
         <a href="{{ route('masterlist.index') }}" class="custom-tab {{ request()->routeIs('masterlist.index') ? 'active-tab' : '' }}">Master List</a>
 
     </div>
+     <!-- Save Button -->
+     <div class="col-md-12 mt-3 text-end">
+        <button onclick="saveChanges()" class="btn btn-success">Save</button>
+    </div>
+
     @if(session('success'))
     <script>
         Swal.fire({
@@ -75,58 +80,55 @@ th {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const excelData = @json($excelData); // Pass PHP data to JavaScript
+    let hot;
 
+    function saveChanges() {
+        const updatedData = hot.getData();
+
+        fetch('{{ route("save.master") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ data: updatedData })
+        }).then(response => response.json())
+          .then(data => {
+              const successMessage = document.getElementById('success-message');
+              const errorMessage = document.getElementById('error-message');
+
+              if (data.success) {
+                  successMessage.textContent = 'Changes saved successfully!';
+                  successMessage.classList.remove('d-none');
+                  setTimeout(() => {
+                      successMessage.classList.add('d-none');
+                  }, 3000);
+              } else {
+                  errorMessage.textContent = 'Failed to save changes.';
+                  errorMessage.classList.remove('d-none');
+                  successMessage.classList.add('d-none');
+                  setTimeout(() => {
+                      errorMessage.classList.add('d-none');
+                  }, 3000);
+              }
+          });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const excelData = @json($excelData);
         const container = document.getElementById('excel-grid');
+
         if (container) {
-            const hot = new Handsontable(container, {
+            hot = new Handsontable(container, {
                 data: excelData,
                 rowHeaders: true,
                 colHeaders: true,
                 contextMenu: true,
                 stretchH: 'all',
                 height: 'auto',
-                licenseKey: 'non-commercial-and-evaluation', // Get a license for production
-                afterChange: (changes, source) => {
-                    if (source === 'edit') {
-                        saveChanges();
-                    }
-                }
+                licenseKey: 'non-commercial-and-evaluation',
             });
-
-            function saveChanges() {
-                const updatedData = hot.getData(); // Get all data from the grid
-
-                fetch('{{ route("save.master") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ data: updatedData })
-                }).then(response => response.json())
-                  .then(data => {
-                    const successMessage = document.getElementById('success-message');
-                    const errorMessage = document.getElementById('error-message');
-                      if (data.success) {
-                        successMessage.textContent = 'Changes saved successfully!';
-                        successMessage.classList.remove('d-none'); // Show the message
-                        setTimeout(() => {
-                            successMessage.classList.add('d-none'); // Hide the message after 3 seconds
-                        }, 3000);
-                      } else {
-                        errorMessage.textContent = 'Failed to save changes.';
-                              errorMessage.classList.remove('d-none'); // Show error message
-                              successMessage.classList.add('d-none'); // Hide success message
-                              setTimeout(() => {
-                                  errorMessage.classList.add('d-none'); // Hide error message after 3 seconds
-                              }, 3000);
-                      }
-                  });
-            }
-        } else {
-            console.error('Container element not found');
         }
     });
 </script>
+

@@ -42,17 +42,29 @@
 <div class="container text-center mt-4">
     {{-- Top Buttons --}}
     <div class="row justify-content-between">
-        <div class="col-md-4 text-start">
-            <a href="{{ url('/docs') }}" class="btn btn-custom green-btn">Docs. Handover</a>
+        <div class="col-md-4 text-center">
         </div>
         <div class="col-md-4 text-center">
-            <img src="{{ asset('/landing_page_bg/logo.png') }}" alt="Logo" class="logo mb-2">
+            <img src="{{ asset('/landing_page_bg/new_logo.png') }}" alt="Logo" class="logo mb-2">
         </div>
-        <div class="col-md-4 text-end">
-            <a href="{{ url('/masterlist') }}" class="btn btn-custom green-btn">Master List</a>
+        <div class="col-md-4 text-center">
         </div>
     </div>
 
+    <div class="mt-4">
+        <a href="{{ url('/home') }}" class="btn btn-custom green-btn">Go To Homepage</a>
+        <div class="row justify-content-between">
+            <div class="col-md-1 text-start"></div>
+            <div class="col-md-3 text-start">
+                <a href="{{ url('/docs') }}" class="btn btn-custom green-btn">Docs. Handover</a>
+            </div>
+            <div class="col-md-3 text-end">
+                <a href="{{ url('/masterlist') }}" class="btn btn-custom green-btn">Master List</a>
+            </div>
+            <div class="col-md-1 text-start"></div>
+
+        </div>
+    </div>
     {{-- Project Status Overview --}}
     <div class="mt-4">
         <a href="{{ url('/mobilization') }}" class="btn btn-custom dark-btn">Project Status Overview</a>

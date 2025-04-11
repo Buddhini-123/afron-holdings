@@ -23,7 +23,7 @@ Route::get('/summary-navigation', [HomeController::class, 'navigation'])->name('
 Route::get('/docs', [DocsController::class, 'index'])->name('docs.index');
 Route::get('/masterlist', [MasterListController::class, 'index'])->name('masterlist.index');
 Route::get('/status', [StatusController::class, 'index'])->name('status.index');
-Route::get('/brief', [BriefController::class, 'index'])->name('brief.index');
+Route::get('/brief/{filter?}', [BriefController::class, 'index'])->name('brief.index');
 
 Route::get('/mobilization/{filter?}', [MobilizationController::class, 'index'])->name('mobilization.index');
 Route::post('/import-mobilization', [MobilizationController::class, 'importExcel'])->name('import.mobilization');

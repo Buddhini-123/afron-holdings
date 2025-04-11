@@ -93,6 +93,9 @@ th {
                         <i class="fas fa-check"></i> <!-- Tick Icon -->
                     </button>
                 </div>
+                <div class="col-auto mt-4 text-center">
+                    <button onclick="saveChanges()" class="btn btn-success">Save</button>
+                </div>
             </div>
         </div>
     </div>
@@ -215,27 +218,8 @@ th {
 <!-- Include jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const excelData = @json($excelData); // Pass PHP data to JavaScript
-
-        const container = document.getElementById('excel-grid');
-        if (container) {
-            const hot = new Handsontable(container, {
-                data: excelData,
-                rowHeaders: true,
-                colHeaders: true,
-                contextMenu: true,
-                stretchH: 'all',
-                height: 'auto',
-                licenseKey: 'non-commercial-and-evaluation', // Get a license for production
-                afterChange: (changes, source) => {
-                    if (source === 'edit') {
-                        saveChanges();
-                    }
-                }
-            });
-
-            function saveChanges() {
+    let hot;
+    function saveChanges() {
                 const updatedData = hot.getData(); // Get all data from the grid
 
                 fetch('{{ route("save.re") }}', {
@@ -265,6 +249,20 @@ th {
                       }
                   });
             }
+    document.addEventListener('DOMContentLoaded', function () {
+        const excelData = @json($excelData); // Pass PHP data to JavaScript
+
+        const container = document.getElementById('excel-grid');
+        if (container) {
+            hot = new Handsontable(container, {
+                data: excelData,
+                rowHeaders: true,
+                colHeaders: true,
+                contextMenu: true,
+                stretchH: 'all',
+                height: 'auto',
+                licenseKey: 'non-commercial-and-evaluation'
+            });
         } else {
             console.error('Container element not found');
         }
