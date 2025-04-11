@@ -25,4 +25,10 @@ class Mobilization extends Model
         'remarks',
         'status'
     ];
+
+    public function positions()
+    {
+        return $this->hasMany(MobilizationPosition::class);
+    }
+
 }
