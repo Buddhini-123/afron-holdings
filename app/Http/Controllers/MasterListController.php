@@ -25,6 +25,7 @@ class MasterListController extends Controller
             $spreadsheet = IOFactory::load($filePath);
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray();
+            
             return view('masterlist.index', ['excelData' => $data]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error loading Excel file: ' . $e->getMessage());
