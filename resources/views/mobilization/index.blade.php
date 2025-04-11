@@ -156,8 +156,8 @@
                     <label>Status</label>
                     <select name="status">
                         <option value="completed" selected>Completed</option>
-                        <option value="in_progress">InCompleted</option>
-                        <option value="pending">Cancelled</option>
+                        <option value="incompleted">InCompleted</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                     @error('status')
                         <small class="text-danger">{{ $message }}</small>

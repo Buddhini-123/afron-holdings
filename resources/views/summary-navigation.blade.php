@@ -67,16 +67,16 @@
     </div>
     {{-- Project Status Overview --}}
     <div class="mt-4">
-        <a href="{{ url('/mobilization') }}" class="btn btn-custom dark-btn">Project Status Overview</a>
+        <a href="{{ url('/mobilizations/show') }}" class="btn btn-custom dark-btn">Project Status Overview</a>
         <div class="row justify-content-between">
             <div class="col-md-4 text-start">
-                <a href="{{ url('/mobilization/completed') }}" class="btn btn-custom dark-btn">Completed</a>
+                <a href="{{ url('/mobilizations/show/completed') }}" class="btn btn-custom dark-btn">Completed</a>
             </div>
             <div class="col-md-4 text-center">
-                <a href="{{ url('/mobilization/incompleted') }}" class="btn btn-custom dark-btn">Incompleted</a>
+                <a href="{{ url('/mobilizations/show/incompleted') }}" class="btn btn-custom dark-btn">Incompleted</a>
             </div>
             <div class="col-md-4 text-end">
-                <a href="{{ url('/mobilization/cancelled') }}" class="btn btn-custom dark-btn">Cancelled</a>
+                <a href="{{ url('/mobilizations/show/cancelled') }}" class="btn btn-custom dark-btn">Cancelled</a>
             </div>
         </div>
     </div>

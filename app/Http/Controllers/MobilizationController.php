@@ -129,4 +129,20 @@ class MobilizationController extends Controller
 
         return redirect()->back()->with('success', 'Mobilization data saved successfully.');
     }
+
+    public function show($status = null)
+    {
+        $query = Mobilization::with('positions');
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $mobilizations = $query->paginate(10);
+
+        $statuses = Mobilization::select('status')->distinct()->pluck('status');
+
+        return view('mobilization.show', compact('mobilizations', 'statuses', 'status'));
+    }
+
 }

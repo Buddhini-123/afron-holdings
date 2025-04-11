@@ -32,10 +32,12 @@ Route::get('/status/show', [StatusController::class, 'showExcelData'])->name('st
 Route::get('/brief/{filter?}', [BriefController::class, 'index'])->name('brief.index');
 Route::get('/project-brief/show/{filter?}', [BriefController::class, 'showExcelData'])->name('brief.show');
 
-Route::get('/mobilization/{filter?}', [MobilizationController::class, 'index'])->name('mobilization.index');
+Route::get('/mobilization', [MobilizationController::class, 'index'])->name('mobilization.index');
+Route::get('/mobilizations/show/{filter?}', [MobilizationController::class, 'show'])->name('mobilization.show');
 Route::post('/mobilization', [MobilizationController::class, 'store'])->name('mobilization.store');
 Route::post('/import-mobilization', [MobilizationController::class, 'importExcel'])->name('import.mobilization');
 Route::post('/save-excel', [MobilizationController::class, 'saveExcel'])->name('save.excel');
+
 Route::post('/save-excel-re', [DocsController::class, 'saveExcelRE'])->name('save.re');
 Route::post('/save-excel-mastelist', [MasterListController::class, 'saveExcelM'])->name('save.master');
 Route::post('/save-excel-status', [StatusController::class, 'saveExcelStatus'])->name('save.status');
