@@ -21,6 +21,8 @@ Route::get('/project', [HomeController::class, 'overview'])->name('project.overv
 Route::get('/summary-navigation', [HomeController::class, 'navigation'])->name('summary.navigation');
 
 Route::get('/docs', [DocsController::class, 'index'])->name('docs.index');
+Route::get('/docs/show', [DocsController::class, 'showExcelData'])->name('docs.show');
+
 Route::get('/masterlist', [MasterListController::class, 'index'])->name('masterlist.index');
 Route::get('/status', [StatusController::class, 'index'])->name('status.index');
 Route::get('/brief/{filter?}', [BriefController::class, 'index'])->name('brief.index');

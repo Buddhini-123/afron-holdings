@@ -8,13 +8,14 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Facades\Excel;
 use Auth;
 use App\Models\Branch;
+use Illuminate\Support\Collection;
 
 class DocsController extends Controller
 {
     public function index()
     {
         $branch = Branch::where('user_id', Auth::user()->id)->first();
-        $filePath = storage_path('app\\' . $branch->branch . '_re_upload.xlsx');
+        $filePath = storage_path('app/' . $branch->branch . '_re_upload.xlsx');
 
         // Check if the file exists
         if (!file_exists($filePath)) {
@@ -52,5 +53,22 @@ class DocsController extends Controller
         $writer->save($filePath);
 
         return response()->json(['success' => true]);
+    }
+
+    public function showExcelData()
+    {
+        $branch = Branch::where('user_id', Auth::user()->id)->first();
+        $filePath = storage_path('app/' . $branch->branch . '_re_upload.xlsx');
+
+        if (!file_exists($filePath)) {
+            return back()->with('error', 'File not found.');
+        }
+
+        $data = Excel::toCollection(null, $filePath);
+
+        // Usually data is in the first sheet
+        $sheetData = $data->first();
+
+        return view('docs.show', compact('sheetData'));
     }
 }
