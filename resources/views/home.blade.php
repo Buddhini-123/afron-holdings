@@ -57,7 +57,7 @@
             <i class="fas fa-sign-out-alt fa-lg text-dark"></i>
         </div>
     </div>
-    <p class="mb-0 fw-medium" style="font-family: Poppins; font-size: 20px">You have currently logged into the Colombo Branch</p>
+    <p class="mb-0 fw-medium" style="font-family: Poppins; font-size: 20px">You have currently logged into the {{$branch->branch}} Branch</p>
 
     <div class="row text-center mt-5">
         <div class="col-md-4">
