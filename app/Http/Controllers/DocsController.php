@@ -37,7 +37,7 @@ class DocsController extends Controller
         $updatedData = $request->input('data');
 
         $branch = Branch::where('user_id', Auth::user()->id)->first();
-        $filePath = storage_path('app\\' . $branch->branch . '_re_upload.xlsx');
+        $filePath = storage_path('app/' . $branch->branch . '_re_upload.xlsx');
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
 

@@ -25,7 +25,7 @@ class MasterListController extends Controller
             $spreadsheet = IOFactory::load($filePath);
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray();
-            
+
             return view('masterlist.index', ['excelData' => $data]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error loading Excel file: ' . $e->getMessage());
@@ -37,7 +37,7 @@ class MasterListController extends Controller
         $updatedData = $request->input('data');
 
         $branch = Branch::where('user_id', Auth::user()->id)->first();
-        $filePath = storage_path('app\\' . $branch->branch . '_masterlist_upload.xlsx');
+        $filePath = storage_path('app/' . $branch->branch . '_masterlist_upload.xlsx');
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
 
