@@ -137,24 +137,35 @@ th {
                       }
                   });
             }
-    document.addEventListener('DOMContentLoaded', function () {
-        const excelData = @json($excelData); // Pass PHP data to JavaScript
+            document.addEventListener('DOMContentLoaded', function () {
+    const excelData = @json($excelData); // Pass PHP data to JavaScript
+    const container = document.getElementById('excel-grid');
 
-        const container = document.getElementById('excel-grid');
-        if (container) {
-            hot = new Handsontable(container, {
-                data: excelData,
-                rowHeaders: true,
-                colHeaders: true,
-                contextMenu: true,
-                stretchH: 'all',
-                height: 'auto',
-                licenseKey: 'non-commercial-and-evaluation', // Get a license for production
-            });
+    if (container) {
+        const statusColIndex = excelData[0].findIndex(h => h.toLowerCase() === 'status');
 
-        } else {
-            console.error('Container element not found');
-        }
-    });
+        hot = new Handsontable(container, {
+            data: excelData,
+            rowHeaders: true,
+            colHeaders: true, // Handsontable will auto-generate column headers as A, B, C...
+            contextMenu: true,
+            stretchH: 'all',
+            height: 'auto',
+            licenseKey: 'non-commercial-and-evaluation',
+            columns: excelData[0].map((_, index) => {
+                if (index === statusColIndex) {
+                    return {
+                        type: 'dropdown',
+                        source: ['Completed', 'Incompleted', 'Cancelled']
+                    };
+                }
+                return {}; // default config for other columns
+            }),
+        });
+    } else {
+        console.error('Container element not found');
+    }
+});
+
 </script>
 
