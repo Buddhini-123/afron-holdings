@@ -119,9 +119,20 @@ th {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @section('content')
 <div class="p-3 mb-5 col-md-12">
-    <div class="col-md-2 mt-3"> <!-- Align to top-right -->
-        <a href="{{ route('status.index') }}" class="custom-tab {{ request()->routeIs('status.index') ? 'active-tab' : '' }}">Project Status Summary</a>
+    <div class="row mt-2">
+        <div class="col-md-2 mt-3"> <!-- Align to top-right -->
+            <a href="{{ route('status.index') }}" class="custom-tab {{ request()->routeIs('status.index') ? 'active-tab' : '' }}">Project Status Summary</a>
 
+        </div>
+        <div class="col-md-6">
+        </div>
+        <div class="col-4">
+            <div class="row justify-content-center">
+                <div class="col-auto mt-4 text-center">
+                    <button onclick="saveChanges()" class="btn btn-success">Save</button>
+                </div>
+            </div>
+        </div>
     </div>
     @if(session('success'))
     <script>
@@ -150,27 +161,8 @@ th {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const excelData = @json($excelData); // Pass PHP data to JavaScript
-
-        const container = document.getElementById('excel-grid');
-        if (container) {
-            const hot = new Handsontable(container, {
-                data: excelData,
-                rowHeaders: true,
-                colHeaders: true,
-                contextMenu: true,
-                stretchH: 'all',
-                height: 'auto',
-                licenseKey: 'non-commercial-and-evaluation', // Get a license for production
-                afterChange: (changes, source) => {
-                    if (source === 'edit') {
-                        saveChanges();
-                    }
-                }
-            });
-
-            function saveChanges() {
+    let hot;
+    function saveChanges() {
                 const updatedData = hot.getData(); // Get all data from the grid
 
                 fetch('{{ route("save.status") }}', {
@@ -199,7 +191,21 @@ th {
                               }, 3000);
                       }
                   });
-            }
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const excelData = @json($excelData); // Pass PHP data to JavaScript
+
+        const container = document.getElementById('excel-grid');
+        if (container) {
+            hot = new Handsontable(container, {
+                data: excelData,
+                rowHeaders: true,
+                colHeaders: true,
+                contextMenu: true,
+                stretchH: 'all',
+                height: 'auto',
+                licenseKey: 'non-commercial-and-evaluation',
+            });
         } else {
             console.error('Container element not found');
         }
