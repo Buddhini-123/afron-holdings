@@ -58,7 +58,18 @@ th {
     .btn-round.purple {
         background-color: purple; /* Purple button */
     }
-
+    .circle-arrow {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    color: #000;
+    font-size: 14px;
+}
 
 </style>
 
@@ -72,7 +83,12 @@ th {
     <!-- Round Buttons with Icons -->
     <div class="row mt-2">
         <div class="col-md-2 mt-3"> <!-- Align to top-right -->
-            <a href="{{ route('docs.index') }}" class="custom-tab {{ request()->routeIs('docs.index') ? 'active-tab' : '' }}">RE</a>
+            <a href="{{ route('docs.show') }}" class="custom-tab {{ request()->routeIs('docs.show') ? 'active-tab' : '' }}">
+                <span class="circle-arrow">
+                    <i class="fas fa-arrow-left"></i> <!-- Or use &#8592; for Unicode arrow -->
+                </span>
+                RE
+            </a>
         </div>
         <div class="col-md-6">
         </div>

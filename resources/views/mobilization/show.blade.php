@@ -26,7 +26,9 @@
 <div class="container-fluid mt-4 px-2">
     <div class="row mb-3">
         <div class="col-md-4">
+            <a href="{{ route('summary.navigation') }}">
             <img src="{{ asset('/landing_page_bg/new_logo.png') }}" class="logo-style" alt="Logo">
+            </a>
         </div>
 
         <div class="col-md-4 text-center mt-4">

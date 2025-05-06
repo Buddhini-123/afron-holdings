@@ -34,7 +34,18 @@
 th {
   background-color: #a6b3d6 !important; /* Light green */
 }
-
+.circle-arrow {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    color: #000;
+    font-size: 14px;
+}
 
 </style>
 
@@ -45,8 +56,12 @@ th {
 @section('content')
 <div class="p-3 mb-5 col-md-12">
     <div class="col-md-2 mt-3"> <!-- Align to top-right -->
-        <a href="{{ route('masterlist.index') }}" class="custom-tab {{ request()->routeIs('masterlist.index') ? 'active-tab' : '' }}">Master List</a>
-
+        <a href="{{ route('masterlist.show') }}" class="custom-tab {{ request()->routeIs('masterlist.show') ? 'active-tab' : '' }}">
+            <span class="circle-arrow">
+                <i class="fas fa-arrow-left"></i> <!-- Or use &#8592; for Unicode arrow -->
+            </span>
+            Master List
+        </a>
     </div>
      <!-- Save Button -->
      <div class="col-md-12 mt-3 text-end">

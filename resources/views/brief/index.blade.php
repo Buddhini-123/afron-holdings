@@ -34,6 +34,19 @@
 th {
   background-color: #a6b3d6 !important; /* Light green */
 }
+.circle-arrow {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    color: #000;
+    font-size: 14px;
+}
+
 
 
 </style>
@@ -42,12 +55,19 @@ th {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
 <!-- Include SweetAlert2 CSS (if needed) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 @section('content')
 <div class="p-3 mb-5 col-md-12">
     <div class="row mt-2">
         <div class="col-md-2 mt-3"> <!-- Align to top-right -->
-            <a href="{{ route('brief.index') }}" class="custom-tab {{ request()->routeIs('brief.index') ? 'active-tab' : '' }}">Project Brief</a>
-
+            {{-- <a href="{{ route('brief.index') }}" class="custom-tab {{ request()->routeIs('brief.index') ? 'active-tab' : '' }}">Project Brief</a> --}}
+            <!-- Back Arrow in Circle with Font Awesome -->
+            <a href="{{ route('brief.show') }}" class="custom-tab {{ request()->routeIs('brief.show') ? 'active-tab' : '' }}">
+                <span class="circle-arrow">
+                    <i class="fas fa-arrow-left"></i> <!-- Or use &#8592; for Unicode arrow -->
+                </span>
+                Project Brief
+            </a>
         </div>
         <div class="col-md-6">
         </div>
