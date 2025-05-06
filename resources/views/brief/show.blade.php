@@ -17,7 +17,7 @@
 
     thead th {
         background-color: #073b3a !important;
-        color: white;
+        color: white !important;
     }
 
 </style>
