@@ -109,6 +109,7 @@
 @section('content')
     <div class="row">
         <div class="login-form col-md-10 col-xs-10 right-col-content position-absolute top-50 start-50 translate-middle " >
+
             <form method="POST" action="{{ route('login') }}" id="login-form">
                 {{ csrf_field() }}
 
@@ -145,6 +146,11 @@
                             </div>
                         </div>
                         <br/>
+                        <div id="loader" style="display: none; text-align: center; margin-top: 15px;">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-lg btn-block rounded-pill" style="background-color:#196f3d; color: #fff">Login</button>
                         </div>
@@ -168,13 +174,12 @@
             e.preventDefault(); // Prevent form submission
 
             let formData = $(this).serialize(); // Get form data
-
+            $("#loader").show();
             $.ajax({
                 url: "{{ route('login') }}",
                 type: "POST",
                 data: formData,
                 success: function (response) {
-                    console.log(response);
 
                     Swal.fire({
                         icon: "success",
@@ -198,6 +203,10 @@
                         timer: 2000,
                         showConfirmButton: false
                     });
+                },
+                complete: function () {
+                    // Hide loader & re-enable button regardless of result
+                    $("#loader").hide();
                 }
             });
         });
