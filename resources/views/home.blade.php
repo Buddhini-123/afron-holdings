@@ -66,7 +66,9 @@
                 <span class="badge bg-dark">Customer Visited</span>
             </div>
             <canvas id="houseChart"></canvas>
-            <a href="/docs" class="btn btn-success mt-3">Go to RE Sheet</a>
+            <button type="button" class="btn btn-success mt-3 open-password-modal" data-target="/docs">
+                Go to RE Sheet
+            </button>
         </div>
 
         <div class="col-md-4">
@@ -75,7 +77,9 @@
                 <span class="badge bg-dark">Approved</span>
             </div>
             <canvas id="houseChart2"></canvas>
-            <a href="/mobilization" class="btn btn-success mt-3">Go to Mobilization</a>
+            <button type="button" class="btn btn-success mt-3 open-password-modal" data-target="/mobilization">
+                Go to Mobilization
+            </button>
         </div>
 
         <div class="col-md-4">
@@ -84,9 +88,34 @@
                 <span class="badge bg-dark">Approved</span>
             </div>
             <canvas id="houseChart3"></canvas>
-            <a href="/masterlist" class="btn btn-success mt-3">Go to Master List</a>
+            <button type="button" class="btn btn-success mt-3 open-password-modal" data-target="/masterlist">
+                Go to Master List
+            </button>
         </div>
     </div>
+
+    <!-- Password Confirmation Modal -->
+    <div class="modal fade" id="confirmPasswordModal" tabindex="-1" aria-labelledby="confirmPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="confirmPasswordForm">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmPasswordModalLabel">Enter Your Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" required>
+                <input type="hidden" name="email" value="{{ Auth::user()->email }}">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Confirm</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- Scripts -->
@@ -196,5 +225,42 @@
         document.getElementById('currentMonth').innerText = currentMonth;
     });
 </script>
+
+<script>
+    let redirectUrl = null;
+    $(document).ready(function() {
+        // Open modal
+        $('.open-password-modal').on('click', function() {
+            redirectUrl = $(this).data('target'); // Capture target
+            $('#confirmPasswordModal').modal('show');
+        });
+
+        // Handle password confirmation form submit
+        $('#confirmPasswordForm').on('submit', function(e) {
+            e.preventDefault();
+
+            const formData = $(this).serialize();
+
+            $.ajax({
+                url: "{{ route('verify.password') }}", // Create this route
+                method: "POST",
+                data: formData,
+                success: function(res) {
+                    if (res.valid && redirectUrl) {
+                        window.location.href = redirectUrl;
+                        $('#confirmPasswordModal').modal('hide');
+                        $('#password').val("");
+                    } else {
+                        Swal.fire("Invalid Password", "Please try again", "error");
+                    }
+                },
+                error: function() {
+                    Swal.fire("Error", "An error occurred", "error");
+                }
+            });
+        });
+    });
+</script>
+
 
 @endsection

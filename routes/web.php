@@ -49,6 +49,9 @@ Route::post('/metrics/increment-customer-visited', [MetricController::class, 'in
 Route::post('/metrics/increment-approved', [MetricController::class, 'incrementApproved'])->name('metrics.incrementApproved');
 Route::post('/metrics/increment-selected', [MetricController::class, 'incrementSelected'])->name('metrics.incrementSelecetd');
 
+Route::post('/verify-password', [AuthController::class, 'verifyPassword'])->name('verify.password');
+
+
 
 
 
