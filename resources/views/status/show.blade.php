@@ -17,7 +17,7 @@
 
     thead th {
         background-color: #073b3a !important;
-        color: white;
+        color: white !important;
     }
 
 </style>
@@ -41,46 +41,50 @@
 
     @if($sheetData && $sheetData->count())
         @php
-            // Remove the first row (usually header if unwanted) and get clean data
-            $cleanData = $sheetData->slice(1);
+        $headerRow = $sheetData->first();
+        $cleanData = $sheetData->slice(1);
 
-            // Filter out # column from headers if present
-            $headers = collect($sheetData->first())->filter(function($value, $key) {
-                return strtolower($value) !== '#' && strtolower($value) !== 'no' && strtolower($value) !== 'index';
-            });
-        @endphp
+        // Find column indices to ignore
+        $ignoreKeys = collect($headerRow)->filter(function($value) {
+            return in_array(strtolower($value), ['#', 'no', 'index']);
+        })->keys();
 
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered align-middle">
-                <thead>
-                    <tr>
-                        @foreach($headers as $header)
-                            <th>{{ $header }}</th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($cleanData as $row)
-                        @php
-                            // Remove empty rows and ignore unwanted index column
-                            $filteredRow = $row->filter(function($cell) {
-                                return !is_null($cell) && $cell !== '';
-                            });
+        // Filter headers using their keys
+        $headers = collect($headerRow)->filter(function($value, $key) use ($ignoreKeys) {
+            return !$ignoreKeys->contains($key);
+        });
+    @endphp
 
-                            $rowWithoutIndex = $row->slice(1); // remove first column (index/#)
-                        @endphp
-
-                        @if($filteredRow->isNotEmpty())
-                            <tr>
-                                @foreach($rowWithoutIndex as $cell)
-                                    <td>{{ $cell }}</td>
-                                @endforeach
-                            </tr>
-                        @endif
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead>
+                <tr>
+                    @foreach($headers as $header)
+                        <th>{{ $header }}</th>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($cleanData as $row)
+                    @php
+                        // Filter the same columns from the data row
+                        $rowData = collect($row)->filter(function($value, $key) use ($ignoreKeys) {
+                            return !$ignoreKeys->contains($key);
+                        });
+                    @endphp
+
+                    @if($rowData->filter()->isNotEmpty())
+                        <tr>
+                            @foreach($rowData as $cell)
+                                <td>{{ $cell }}</td>
+                            @endforeach
+                        </tr>
+                    @endif
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
     @else
         <div class="alert alert-warning">
             No data found in the Excel file.
