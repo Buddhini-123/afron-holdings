@@ -21,7 +21,7 @@ class MetricController extends Controller
         );
 
         // Increment the call count
-        $metric->increment('calls');
+        $metric->increment('calls', $request->increment_by);
 
         // Return a success response
         return response()->json([
@@ -41,9 +41,8 @@ class MetricController extends Controller
             ['branch_id' => $request->branch_id],
             ['customer_visited' => 0, 'customer_visited' => 0, 'approved' => 0, 'selected' => 0]
         );
-
         // Increment the call count
-        $metric->increment('customer_visited');
+        $metric->increment('customer_visited', $request->increment_by);
 
         // Return a success response
         return response()->json([
@@ -66,7 +65,7 @@ class MetricController extends Controller
         );
 
         // Increment the call count
-        $metric->increment('approved');
+        $metric->increment('approved', $request->increment_by);
 
         // Return a success response
         return response()->json([

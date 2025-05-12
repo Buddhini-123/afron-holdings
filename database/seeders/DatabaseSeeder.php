@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UsersTableSeeder::class, // Add this line
-            BranchesTableSeeder::class
+            BranchesTableSeeder::class,
+            HandleBySeeder::class
         ]);
     }
 }

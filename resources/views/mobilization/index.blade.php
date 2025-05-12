@@ -133,7 +133,12 @@
                 </div>
                 <div class="col-md-4">
                     <label>Handled By</label>
-                    <input type="text" name="handled_by" placeholder="Enter Handled By">
+                    <select name="handled_by">
+                        <option value="">Select Handler</option>
+                        @foreach ($handlers as $handler)
+                            <option value="{{ $handler->id }}">{{ $handler->name }}</option>
+                        @endforeach
+                    </select>
                     @error('handled_by')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -160,6 +165,13 @@
                         <option value="cancelled">Cancelled</option>
                     </select>
                     @error('status')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-md-4">
+                    <label>Remarks</label>
+                    <input type="text" name="remarks" placeholder="Enter Remarks">
+                    @error('remarks')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>

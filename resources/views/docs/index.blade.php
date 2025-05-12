@@ -120,7 +120,7 @@ th {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="callModalLabel">Increment Call Count</h5>
+                    <h5 class="modal-title" id="callModalLabel">Add Call Count</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -134,12 +134,14 @@ th {
                             <select class="form-control" id="branch_id" name="branch_id" disabled>
                                     <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
                             </select>
+                            <label for="callIncrement">Number of calls</label>
+                            <input type="number" id="callIncrement" class="form-control" min="1" value="1" required>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitCall">Increment Call Count</button>
+                    <button type="button" class="btn btn-primary" id="submitCall">Save</button>
                 </div>
             </div>
         </div>
@@ -150,7 +152,7 @@ th {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="customerVisitedModalLabel">Increment Call Count</h5>
+                    <h5 class="modal-title" id="customerVisitedModalLabel">Add Customer Visited Count</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -164,12 +166,14 @@ th {
                             <select class="form-control" id="branch_id_customer" name="branch_id_customer" disabled>
                                     <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
                             </select>
+                            <label for="callIncrement">Count Number</label>
+                            <input type="number" id="customerIncrement" class="form-control" min="1" value="1" required>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitCustomerVisited">Increment Customer Visited Count</button>
+                    <button type="button" class="btn btn-primary" id="submitCustomerVisited">Save</button>
                 </div>
             </div>
         </div>
@@ -193,12 +197,14 @@ th {
                             <select class="form-control" id="branch_id_selected" name="branch_id_selected" disabled>
                                     <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
                             </select>
+                            <label for="callIncrement">Count Number</label>
+                            <input type="number" id="approvedIncrement" class="form-control" min="1" value="1" required>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitSelected">Increment Selected Count</button>
+                    <button type="button" class="btn btn-primary" id="submitSelected">Save</button>
                 </div>
             </div>
         </div>
@@ -291,12 +297,14 @@ th {
 
             // Get the selected branch ID
             const branchId = $('#branch_id').val();
+            const incrementValue = $('#callIncrement').val();
             // Send an AJAX request to increment the call count
             $.ajax({
                 url: "{{ route('metrics.incrementCalls') }}",
                 method: 'POST',
                 data: {
                     branch_id: branchId,
+                    increment_by: incrementValue,
                     _token: "{{ csrf_token() }}" // Include CSRF token for security
                 },
                 success: function (response) {
@@ -322,6 +330,7 @@ th {
 
             // Get the selected branch ID
             const branchId = $('#branch_id_customer').val();
+            const incrementValue = $('#customerIncrement').val();
             console.log(branchId);
 
             // Send an AJAX request to increment the call count
@@ -330,6 +339,7 @@ th {
                 method: 'POST',
                 data: {
                     branch_id: branchId,
+                    increment_by: incrementValue,
                     _token: "{{ csrf_token() }}" // Include CSRF token for security
                 },
                 success: function (response) {
@@ -357,6 +367,7 @@ th {
 
             // Get the selected branch ID
             const branchId = $('#branch_id_selected').val();
+            const incrementValue = $('#approvedIncrement').val();
 
             // Send an AJAX request to increment the call count
             $.ajax({
@@ -364,6 +375,7 @@ th {
                 method: 'POST',
                 data: {
                     branch_id: branchId,
+                    increment_by: incrementValue,
                     _token: "{{ csrf_token() }}" // Include CSRF token for security
                 },
                 success: function (response) {

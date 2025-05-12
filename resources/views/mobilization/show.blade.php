@@ -45,33 +45,45 @@
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
+                    <th>Number</th>
                     <th>Date</th>
                     <th>Job Order No</th>
-                    <th>Company</th>
+                    <th>Company Name</th>
+                    <th>Country</th>
+                    <th>Position</th>
+                    <th>Req No</th>
+                    <th>Total CV</th>
+                    <th>Balnce Req CV</th>
                     <th>Handled By</th>
                     <th>Deadline</th>
-                    <th>Country</th>
+                    <th>Remarks</th>
                     <th>Status</th>
-                    <th>Positions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($mobilizations as $mob)
                 <tr>
+                    <td> 0{{ $mob->id }}</td>
                     <td>{{ $mob->date }}</td>
                     <td>{{ $mob->job_order_no }}</td>
                     <td>{{ $mob->company_name }}</td>
-                    <td>{{ $mob->handled_by }}</td>
-                    <td>{{ $mob->deadline }}</td>
                     <td>{{ $mob->country }}</td>
-                    <td>{{ ucfirst($mob->status) }}</td>
                     <td>
                         <ul class="mb-0 ps-3">
                             @foreach($mob->positions as $pos)
-                                <li>{{ $pos->position }} ({{ $pos->req_no }} req, {{ $pos->total_cv }} CVs)</li>
+                                <li>{{ $pos->position }} ({{ $pos->req_no }} req, {{ $pos->total_cv }} CVs, {{ $pos->bal_req_cv}} Balance Req CV)</li>
                             @endforeach
                         </ul>
                     </td>
+                    <td>{{ $mob->positions->sum('req_no') }}
+                    </td>
+                    <td>{{ $mob->positions->sum('total_cv') }}</td>
+                    <td>{{ $mob->positions->sum('bal_req_cv') }}</td>
+                    <td>{{ $mob->handled_by }}</td>
+                    <td>{{ $mob->deadline }}</td>
+                    <td>{{ $mob->remarks }}</td>
+                    <td>{{ ucfirst($mob->status) }}</td>
+
                 </tr>
                 @endforeach
             </tbody>

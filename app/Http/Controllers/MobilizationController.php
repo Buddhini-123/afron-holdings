@@ -9,6 +9,7 @@ use App\Models\Mobilization;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use App\Models\Branch;
+use App\Models\HandleBy;
 use Auth;
 
 class MobilizationController extends Controller
@@ -45,7 +46,9 @@ class MobilizationController extends Controller
         //         }
         //     }
 
-            return view('mobilization.index', ['branch' => $branch]);
+        $handlers = HandleBy::all();
+
+            return view('mobilization.index', ['branch' => $branch, 'handlers' => $handlers]);
         // } catch (\Exception $e) {
         //     return redirect()->back()->with('error', 'Error loading Excel file: ' . $e->getMessage());
         // }
@@ -115,6 +118,7 @@ class MobilizationController extends Controller
             'deadline' => $request->deadline,
             'country' => $request->country,
             'status' => $request->status,
+            'remarks' => $request->remarks
         ]);
 
         // Store positions (assumes related model like MobilizationPosition)

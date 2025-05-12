@@ -18,9 +18,18 @@
 
     canvas {
         width: 100% !important;
-        height: 300px !important;
+        height: 400px !important;
         cursor: pointer;
     }
+
+    /* canvas {
+    width: 300px !important;
+    height: 300px !important;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: 0 auto;
+} */
 
     .badge {
         font-size: 14px;
