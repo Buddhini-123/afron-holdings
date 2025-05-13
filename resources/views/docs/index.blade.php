@@ -109,6 +109,11 @@ th {
                         <i class="fas fa-check"></i> <!-- Tick Icon -->
                     </button>
                 </div>
+                <div class="col-auto text-center">
+                    <button class="btn-round green" data-toggle="modal" data-target="#approvedModal">
+                        <i class="fas fa-check"></i> <!-- Tick Icon -->
+                    </button>
+                </div>
                 <div class="col-auto mt-4 text-center">
                     <button onclick="saveChanges()" class="btn btn-success">Save</button>
                 </div>
@@ -205,6 +210,38 @@ th {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="submitSelected">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Approved -->
+    <div class="modal fade" id="approvedModal" tabindex="-1" role="dialog" aria-labelledby="approvedModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="approvedModalLabel">Increment Call Count</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Branch Selection Form -->
+                    <form id="callForm">
+                        @csrf
+                        <div class="form-group">
+                            <label for="branch_id_approved">Branch</label>
+                            <select class="form-control" id="branch_id_approved" name="branch_id_approved" disabled>
+                                    <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
+                            </select>
+                            <label for="apprIncrement">Count Number</label>
+                            <input type="number" id="apprIncrement" class="form-control" min="1" value="1" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submitApproved">Save</button>
                 </div>
             </div>
         </div>
