@@ -38,6 +38,10 @@
         </div>
 
         <div class="col-md-4 d-flex justify-content-end align-items-center gap-2">
+             <a class="btn btn-sm btn-success collapsed" data-bs-toggle="modal" data-bs-target="#filterModal" href="#multiCollapseExample1" role="button"
+            aria-expanded="false" aria-controls="multiCollapseExample1" data-bs-toggle="tooltip" title="{{ __('Filter') }}">
+            <i class="fas fa-filter"></i>
+            </a>
             <a href="{{ route('masterlist.index') }}" class="btn btn-success">Add MasterList</a>
         </div>
     </div>
@@ -89,5 +93,71 @@
             No data found in the Excel file.
         </div>
     @endif
+
+    <!-- Filter Modal -->
+        <form action="{{ route('masterlist.show') }}" method="get" id="filter-form">
+            <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="filterModalLabel">{{ __('Filter MasterList') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                    <div class="row">
+                                            <div class="col-md-6">
+                                                {{-- Comapny Name Filter --}}
+                                                <div class="form-group">
+                                                    <label for="se_number">{{ __('SE Number') }}</label>
+                                                    <input type="text" id="se_number" name="se_number" class="form-control"
+                                                        value="{{ request('se_number') }}"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{-- Job Order Number Filter --}}
+                                                <div class="form-group">
+                                                    <label for="passport_number_index">{{ __('Passport Number') }}</label>
+                                                    <input type="text" name="passport_number" id="passport_number_index" class="form-control"
+                                                        value="{{ request('passport_number') }}">
+                                                </div>
+                                            </div>
+                                    </div>
+
+                                    <div class="row">
+                                        {{-- <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="date_index">{{ __('Date') }}</label>
+                                                <input type="date" name="date" id="date_index" class="form-control"
+                                                    value="{{ request('date') }}">
+                                            </div>
+                                        </div> --}}
+                                        <div class="col-md-6">
+                                            {{-- Status Filter --}}
+                                            <div class="form-group">
+                                                <label for="status">{{ __('Current Status') }}</label>
+                                                <select name="status" id="status" class="form-control choice-select">
+                                                    <option value="">{{ __('All Statuses') }}</option>
+                                                    <option value="Completed" {{ request('status') == 'Complete' ? 'selected' : '' }}>
+                                                        {{ __('Completed') }}
+                                                    </option>
+                                                    <option value="Incompleted" {{ request('status') == 'Incomplete' ? 'selected' : '' }}>
+                                                        {{ __('Incompleted') }}
+                                                    </option>
+                                                    <option value="Cancel" {{ request('status') == 'Cancel' ? 'selected' : '' }}>
+                                                        {{ __('Canceled') }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="{{route('masterlist.show')}}" class="btn btn-danger">{{ __('Reset') }}</a>
+                                <button type="submit" class="btn btn-primary">{{ __('Apply') }}</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </form>
 </div>
 @endsection

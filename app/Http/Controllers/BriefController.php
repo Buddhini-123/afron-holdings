@@ -73,65 +73,77 @@ class BriefController extends Controller
     }
 
     public function showExcelData(Request $request)
-    {
-        $branch = Branch::where('user_id', Auth::user()->id)->first();
-        $filePath = storage_path('app/' . $branch->branch . '_brief_upload.xlsx');
+{
+    // Get the branch based on the authenticated user
+    $branch = Branch::where('user_id', Auth::user()->id)->first();
+    $filePath = storage_path('app/' . $branch->branch . '_masterlist_upload.xlsx');
 
-        if (!file_exists($filePath)) {
-            return back()->with('error', 'File not found.');
+    // Check if the file exists
+    if (!file_exists($filePath)) {
+        return back()->with('error', 'File not found.');
+    }
+
+    // Load the Excel data
+    $data = Excel::toCollection(null, $filePath);
+logger('Raw Excel collection:', $data->toArray());
+    // Check if data is available
+    if ($data->isEmpty()) {
+        return back()->with('error', 'No data found in the Excel file.');
+    }
+
+    $sheet = $data->first(); // Get the first sheet
+
+    // Check if there is enough data
+    if ($sheet->count() < 2) {
+        return back()->with('error', 'Insufficient data in the Excel file.');
+    }
+
+    // Extract the header row and the data rows
+    $headerRow = $sheet->first();
+    $rows = $sheet->slice(1); // Data rows
+
+    // Map header to lowercase and normalize column names
+    $headerMap = collect($headerRow)->mapWithKeys(function ($value, $index) {
+        if ($value) {
+            $normalizedKey = strtolower(str_replace([' ', '.'], '_', trim($value)));
+            return [$normalizedKey => $index];
         }
+        return [];
+    });
 
-        $data = Excel::toCollection(null, $filePath);
+    // Get the filters from the request
+    $filters = [
+        'se_number' => $request->se_number,
+        'passport_number' => $request->passport_number,
+        'status' => $request->status,
+    ];
 
-        if ($data->isEmpty()) {
-            return back()->with('error', 'No data found in the Excel file.');
+    // Validate if any filter column is missing
+    foreach ($filters as $key => $value) {
+        if (!empty($value) && !$headerMap->has($key)) {
+            return back()->with('error', "The column '{$key}' is missing in the Excel sheet.");
         }
+    }
 
-        $sheet = $data->first(); // First sheet
-        if ($sheet->count() < 2) {
-            return back()->with('error', 'Insufficient data in the Excel file.');
-        }
-
-        $headerRow = $sheet->first();
-        $rows = $sheet->slice(1); // Data rows
-        // Map header to lowercase for index searching
-        $headerMap = collect($headerRow)->mapWithKeys(function ($value, $index) {
-            if ($value) {
-                $normalizedKey = strtolower(str_replace([' ', '.'], '_', trim($value)));
-                return [$normalizedKey => $index];
-            }
-            return [];
-        });
-
-        $filters = [
-            'company_name' => $request->company_name,
-            'job_order_no' => $request->job_order_no,
-            'date'         => $request->date,
-            'status'       => $request->status,
-        ];
-
+    // Apply filters on the rows
+    $filteredRows = $rows->filter(function ($row) use ($filters, $headerMap) {
         foreach ($filters as $key => $value) {
-            if (!empty($value) && !$headerMap->has($key)) {
-                $label = $filterToLabel[$key] ?? $key;
-                return back()->with('error', "The column '{$label}' is missing in the Excel sheet.");
-            }
-        }
-
-        $rows = $rows->filter(function ($row) use ($filters, $headerMap) {
-            foreach ($filters as $key => $value) {
-                if (!empty($value) && isset($headerMap[$key])) {
-                    $index = $headerMap[$key];
-                    if (!isset($row[$index]) || strtolower(trim($row[$index])) !== strtolower(trim($value))) {
-                        return false;
-                    }
+            if (!empty($value) && isset($headerMap[$key])) {
+                $index = $headerMap[$key];
+                // Check if the row contains the matching value
+                if (!isset($row[$index]) || strtolower(trim($row[$index])) !== strtolower(trim($value))) {
+                    return false;
                 }
             }
-            return true;
-        })->values();
+        }
+        return true;
+    })->values();
 
-        $sheetData = collect([$headerRow])->concat($rows);
+    // Add the header row back to the filtered rows
+    $sheetData = collect([$headerRow])->concat($filteredRows);
 
-        return view('brief.show', compact('sheetData', 'branch'));
-    }
+    // Return the view with the filtered data
+    return view('masterlist.show', compact('sheetData', 'branch'));
+}
 
 }
