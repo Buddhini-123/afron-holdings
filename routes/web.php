@@ -33,7 +33,7 @@ Route::get('/brief/{filter?}', [BriefController::class, 'index'])->name('brief.i
 Route::get('/project-brief/show', [BriefController::class, 'showExcelData'])->name('brief.show');
 
 Route::get('/mobilization', [MobilizationController::class, 'index'])->name('mobilization.index');
-Route::get('/mobilizations/show/{filter?}', [MobilizationController::class, 'show'])->name('mobilization.show');
+Route::get('/mobilizations/show', [MobilizationController::class, 'show'])->name('mobilization.show');
 Route::post('/mobilization', [MobilizationController::class, 'store'])->name('mobilization.store');
 Route::post('/import-mobilization', [MobilizationController::class, 'importExcel'])->name('import.mobilization');
 Route::post('/save-excel', [MobilizationController::class, 'saveExcel'])->name('save.excel');

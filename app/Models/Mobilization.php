@@ -20,7 +20,7 @@ class Mobilization extends Model
         'req_no',
         'total_cv',
         'bal_req_cv',
-        'handle_by',
+        'handled_by',
         'deadline',
         'remarks',
         'status',
@@ -31,6 +31,11 @@ class Mobilization extends Model
     public function positions()
     {
         return $this->hasMany(MobilizationPosition::class);
+    }
+
+    public function handlers()
+    {
+        return $this->hasOne(HandleBy::class, 'id', 'handled_by');
     }
 
 }

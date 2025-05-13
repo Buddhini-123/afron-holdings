@@ -134,19 +134,33 @@ class MobilizationController extends Controller
         return redirect()->back()->with('success', 'Mobilization data saved successfully.');
     }
 
-    public function show($status = null)
+    public function show(Request $request)
     {
         $query = Mobilization::with('positions');
 
-        if ($status) {
-            $query->where('status', $status);
+        // Apply filters conditionally
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('job_order_no')) {
+            $query->where('job_order_no', 'like', '%' . $request->job_order_no . '%');
+        }
+
+        if ($request->filled('company_name')) {
+            $query->where('company_name', 'like', '%' . $request->company_name . '%');
         }
 
         $mobilizations = $query->paginate(10);
 
         $statuses = Mobilization::select('status')->distinct()->pluck('status');
 
-        return view('mobilization.show', compact('mobilizations', 'statuses', 'status'));
+        return view('mobilization.show', [
+            'mobilizations' => $mobilizations,
+            'statuses' => $statuses,
+            'status' => $request->status,
+        ]);
     }
+
 
 }
