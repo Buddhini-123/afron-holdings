@@ -37,6 +37,10 @@
         </div>
 
         <div class="col-md-4 d-flex justify-content-end align-items-center gap-2">
+            <a class="btn btn-sm btn-success collapsed" data-bs-toggle="modal" data-bs-target="#filterModal" href="#multiCollapseExample1" role="button"
+            aria-expanded="false" aria-controls="multiCollapseExample1" data-bs-toggle="tooltip" title="{{ __('Filter') }}">
+            <i class="fas fa-filter"></i>
+            </a>
             <a href="{{ route('status.index') }}" class="btn btn-success">Add Project Status</a>
         </div>
     </div>
@@ -92,5 +96,49 @@
             No data found in the Excel file.
         </div>
     @endif
+
+     <!-- Filter Modal -->
+        <form action="{{ route('status.show') }}" method="get" id="filter-form">
+            <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="filterModalLabel">{{ __('Filter Project Status') }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                    <div class="row">
+                                            <div class="col-md-6">
+                                                {{-- Comapny Name Filter --}}
+                                                <div class="form-group">
+                                                    <label for="handle_by">{{ __('Handle By') }}</label>
+                                                    <select id="handle_by" name="handle_by" class="form-control">
+                                                        <option value="">{{ __('All') }}</option>
+                                                        @foreach ($handlers as $handler)
+                                                            <option value="{{ $handler->name }}" {{ request('handle_by') == $handler->name ? 'selected' : '' }}>
+                                                                {{ $handler->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{-- Job Order Number Filter --}}
+                                                <div class="form-group">
+                                                    <label for="job_order_no_index">{{ __('Job Order Number') }}</label>
+                                                    <input type="text" name="job_order_no" id="job_order_no_index" class="form-control"
+                                                        value="{{ request('job_order_no') }}">
+                                                </div>
+                                            </div>
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="{{route('status.show')}}" class="btn btn-danger">{{ __('Reset') }}</a>
+                                <button type="submit" class="btn btn-primary">{{ __('Apply') }}</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </form>
 </div>
 @endsection

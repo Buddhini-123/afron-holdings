@@ -22,7 +22,7 @@
     font-size: 16px;
     text-align: center;
     width: 150px;
-    height: 60px;
+    height: 80px;
     text-decoration: none;
 }
 

@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Branch;
+use App\Models\HandleBy;
 use Auth;
 
 class StatusController extends Controller
@@ -56,7 +57,7 @@ class StatusController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function showExcelData()
+    public function showExcelData(Request $request)
     {
         $branch = Branch::where('user_id', Auth::user()->id)->first();
         $filePath = storage_path('app/' . $branch->branch . '_status_upload.xlsx');
@@ -67,9 +68,60 @@ class StatusController extends Controller
 
         $data = Excel::toCollection(null, $filePath);
 
-        // Usually data is in the first sheet
-        $sheetData = $data->first();
+        if ($data->isEmpty()) {
+            return back()->with('error', 'No data found in the Excel file.');
+        }
 
-        return view('status.show', compact('sheetData'));
+        $sheet = $data->first();
+
+        if ($sheet->count() < 2) {
+            return back()->with('error', 'Insufficient data in the Excel file.');
+        }
+
+        $headerRow = $sheet->first();
+        $rows = $sheet->slice(1); // skip header
+
+        // Map of filter keys => Excel header labels
+        $filterToLabel = [
+            'handle_by' => 'Handle By',
+            'job_order_no' => 'Job Order No'
+        ];
+
+        // Create a header map: "Handle By" => index
+       $headerMap = collect($headerRow)
+        ->filter(function ($value) {
+            return !is_null($value) && $value !== '';
+        })
+        ->mapWithKeys(function ($value, $index) {
+            return [$value => $index];
+        });
+
+        // Validate filter keys
+        foreach ($filterToLabel as $key => $columnLabel) {
+            if (!empty($request->$key) && !$headerMap->has($columnLabel)) {
+                return back()->with('error', "The column '{$columnLabel}' is missing in the Excel sheet.");
+            }
+        }
+
+        // Filter rows
+        $filteredRows = $rows->filter(function ($row) use ($request, $filterToLabel, $headerMap) {
+            foreach ($filterToLabel as $key => $label) {
+                $filterValue = $request->$key;
+                if (!empty($filterValue)) {
+                    $index = $headerMap[$label];
+                    if (!isset($row[$index]) || stripos($row[$index], $filterValue) === false) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
+
+        // Combine header and filtered data
+        $sheetData = collect([$headerRow])->concat($filteredRows)->values();
+        $handlers = HandleBy::all();
+
+        return view('status.show', compact('sheetData', 'handlers'));
     }
+
 }
