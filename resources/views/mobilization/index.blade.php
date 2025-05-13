@@ -45,6 +45,22 @@
         height: 160px;
         width: 280px;
     }
+    .btn-round {
+        width: 60px; /* Adjust size of the round button */
+        height: 60px; /* Adjust size of the round button */
+        border-radius: 50%; /* Make it round */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px; /* Adjust icon size */
+        color: white; /* Icon color */
+        border: none; /* Remove border */
+        margin: 10px; /* Add some spacing */
+    }
+
+    .btn-round.green {
+        background-color: green; /* Green button */
+    }
 </style>
 
 <!-- SweetAlert2 CSS -->
@@ -60,6 +76,9 @@
         <div class="col-md-4 text-center">
             <img src="{{ asset('/landing_page_bg/new_logo.png') }}" alt="Logo" class="logo mb-2">
         </div>
+        <button class="btn-round green" data-toggle="modal" data-target="#approvedModal">
+           <i class="fas fa-check"></i> <!-- Tick Icon -->
+        </button>
         <a href="#" class="btn btn-custom green-btn">Mobilization Form</a>
     </div>
 
@@ -250,6 +269,38 @@
             </div>
         </form>
     </div>
+
+    <!-- Modal for Approved -->
+    <div class="modal fade" id="approvedModal" tabindex="-1" role="dialog" aria-labelledby="approvedModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="approvedModalLabel">Increment Approved Count</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Branch Selection Form -->
+                    <form id="callForm">
+                        @csrf
+                        <div class="form-group">
+                            <label for="branch_id_approved">Branch</label>
+                            <select class="form-control" id="branch_id_approved" name="branch_id_approved" disabled>
+                                    <option value="{{ $branch->id }}">{{ $branch->branch }}</option>
+                            </select>
+                            <label for="apprIncrement">Count Number</label>
+                            <input type="number" id="apprIncrement" class="form-control" min="1" value="1" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submitApproved">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Include jQuery (required for SweetAlert2 and Toastr) -->
@@ -306,6 +357,43 @@
 
         // Bind total calculation events to new inputs
         row.querySelectorAll('.req_no, .total_cv, .bal_cv').forEach(bindTotalEvents);
+    });
+</script>
+<script>
+    $(document).ready(function () {
+    $('#submitApproved').click(function () {
+
+            // Get the selected branch ID
+            const branchId = $('#branch_id_approved').val();
+            const incrementValue = $('#apprIncrement').val();
+
+            // Send an AJAX request to increment the call count
+            $.ajax({
+                url: "{{ route('metrics.incrementApproved') }}",
+                method: 'POST',
+                data: {
+                    branch_id: branchId,
+                    increment_by: incrementValue,
+                    _token: "{{ csrf_token() }}" // Include CSRF token for security
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                        icon: "success",
+                        title: "Approved count updated successfully!",
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                        });
+                    } else {
+                        alert('Failed to update approved count.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while updating the approved count.');
+                }
+            });
+        });
     });
 </script>
 

@@ -88,7 +88,7 @@ class MetricController extends Controller
         );
 
         // Increment the call count
-        $metric->increment('selected');
+        $metric->increment('selected', $request->increment_by);
 
         // Return a success response
         return response()->json([
