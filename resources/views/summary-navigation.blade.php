@@ -89,13 +89,13 @@
         </div>
         <div class="row justify-content-between">
             <div class="col-md-4 text-start">
-                <a href="{{ url('/project-brief/show/completed') }}" class="btn btn-custom blue-btn">Completed</a>
+                <a href="{{ url('/project-brief/show?status=Completed') }}" class="btn btn-custom blue-btn">Completed</a>
             </div>
             <div class="col-md-4 text-center">
-                <a href="{{ url('/project-brief/show/incompleted') }}" class="btn btn-custom blue-btn">Incompleted</a>
+                <a href="{{ url('/project-brief/show?status=incompleted') }}" class="btn btn-custom blue-btn">Incompleted</a>
             </div>
             <div class="col-md-4 text-end">
-                <a href="{{ url('/project-brief/show/cancelled') }}" class="btn btn-custom blue-btn">Cancelled</a>
+                <a href="{{ url('/project-brief/show?status=cancelled') }}" class="btn btn-custom blue-btn">Cancelled</a>
             </div>
         </div>
     </div>
