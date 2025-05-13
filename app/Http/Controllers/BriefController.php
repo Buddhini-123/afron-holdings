@@ -72,7 +72,7 @@ class BriefController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function showExcelData($filter = null)
+    public function showExcelData(Request $request)
     {
         $branch = Branch::where('user_id', Auth::user()->id)->first();
         $filePath = storage_path('app/' . $branch->branch . '_brief_upload.xlsx');
@@ -92,25 +92,46 @@ class BriefController extends Controller
             return back()->with('error', 'Insufficient data in the Excel file.');
         }
 
-        // Extract header row
         $headerRow = $sheet->first();
-        $rows = $sheet->slice(1); // Remove header
+        $rows = $sheet->slice(1); // Data rows
+        // Map header to lowercase for index searching
+        $headerMap = collect($headerRow)->mapWithKeys(function ($value, $index) {
+            if ($value) {
+                $normalizedKey = strtolower(str_replace([' ', '.'], '_', trim($value)));
+                return [$normalizedKey => $index];
+            }
+            return [];
+        });
 
-        // Find the index of the "status" column (case-insensitive)
-        $statusIndex = collect($headerRow)->map(function ($value) {
-            return strtolower($value);
-        })->search('status');
+        $filters = [
+            'company_name' => $request->company_name,
+            'job_order_no' => $request->job_order_no,
+            'date'         => $request->date,
+            'status'       => $request->status,
+        ];
 
-        // If a filter is given and status column exists
-        if ($filter && $statusIndex !== false) {
-            $rows = $rows->filter(function ($row) use ($statusIndex, $filter) {
-                return isset($row[$statusIndex]) && strtolower($row[$statusIndex]) === strtolower($filter);
-            })->values();
+        foreach ($filters as $key => $value) {
+            if (!empty($value) && !$headerMap->has($key)) {
+                $label = $filterToLabel[$key] ?? $key;
+                return back()->with('error', "The column '{$label}' is missing in the Excel sheet.");
+            }
         }
 
-        // Re-combine header and filtered rows
+        $rows = $rows->filter(function ($row) use ($filters, $headerMap) {
+            foreach ($filters as $key => $value) {
+                if (!empty($value) && isset($headerMap[$key])) {
+                    $index = $headerMap[$key];
+                    if (!isset($row[$index]) || strtolower(trim($row[$index])) !== strtolower(trim($value))) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        })->values();
+
         $sheetData = collect([$headerRow])->concat($rows);
 
         return view('brief.show', compact('sheetData', 'branch'));
     }
+
 }

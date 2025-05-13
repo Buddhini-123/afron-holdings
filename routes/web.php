@@ -30,7 +30,7 @@ Route::get('/status', [StatusController::class, 'index'])->name('status.index');
 Route::get('/status/show', [StatusController::class, 'showExcelData'])->name('status.show');
 
 Route::get('/brief/{filter?}', [BriefController::class, 'index'])->name('brief.index');
-Route::get('/project-brief/show/{filter?}', [BriefController::class, 'showExcelData'])->name('brief.show');
+Route::get('/project-brief/show', [BriefController::class, 'showExcelData'])->name('brief.show');
 
 Route::get('/mobilization', [MobilizationController::class, 'index'])->name('mobilization.index');
 Route::get('/mobilizations/show/{filter?}', [MobilizationController::class, 'show'])->name('mobilization.show');

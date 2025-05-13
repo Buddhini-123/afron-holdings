@@ -34,7 +34,6 @@
         <div class="col-md-4 text-center mt-4">
             <p class="mb-0 fw-medium" style="font-family: Poppins; font-size: 20px; color: #073b3a">Excel Data for Mobilization</p>
         </div>
-
         <div class="col-md-4 d-flex justify-content-end align-items-center gap-2">
             <a href="{{ route('mobilization.index') }}" class="btn btn-success">Add Mobilization</a>
         </div>
